@@ -87,5 +87,69 @@ button:active {
     color: #000;
 }
 
-.glow {
+.glow {t
     text-shadow: 
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="loadingScreen">
+        <div class="small">CSE • SECTION H</div>
+
+        <h1 class="glow">INITIALIZING...</h1>
+
+        <div class="loader">
+            <div class="progress"></div>
+        </div>
+
+        <div class="status" id="status">
+            VERIFYING ACCESS...
+        </div>
+    </div>
+
+    <div class="welcome" id="welcomeScreen">
+
+        <div class="small">ACCESS GRANTED ✓</div>
+
+        <h1 class="glow">
+            WELCOME TO<br>
+            CSE — SECTION H
+        </h1>
+
+        <p>
+            YOUR DIGITAL CLASSROOM AWAITS.
+        </p>
+
+        <button onclick="joinGroup()">
+            ENTER GROUP →
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+setTimeout(function() {
+
+    document.getElementById("loadingScreen").style.display = "none";
+
+    document.getElementById("welcomeScreen").style.display = "block";
+
+}, 3500);
+
+
+function joinGroup() {
+
+    window.location.href =
+    "https://chat.whatsapp.com/Ls8BERkS9eSEqb3wgJZHi5";
+
+}
+
+</script>
+
+</body>
+</html>
