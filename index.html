@@ -442,209 +442,14 @@ function joinGroup() {
 }
 
 </script>
-<!-- ================================= -->
-<!-- TEACHER ACCESS SYSTEM - START -->
-<!-- ================================= -->
-
-<style>
-  #teacherAccess {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:
-      radial-gradient(circle at center, rgba(255, 193, 7, 0.08), transparent 45%),
-      #050505;
-    color: #f5f5f5;
-    font-family: "Courier New", monospace;
-    overflow: hidden;
-  }
-
-  #teacherAccess::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.025) 0px,
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-    pointer-events: none;
-  }
-
-  /* PROCESSING SCREEN */
-
-  .faculty-processing {
-    width: min(88%, 520px);
-    text-align: center;
-    position: relative;
-    animation: processingIn 0.5s ease;
-  }
-
-  .processing-title {
-    color: #ffc107;
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 30px;
-    text-shadow: 0 0 12px rgba(255,193,7,0.4);
-  }
-
-  .processing-status {
-    color: #aaa;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    min-height: 18px;
-    margin-bottom: 18px;
-  }
-
-  .processing-bar {
-    width: 100%;
-    height: 2px;
-    background: rgba(255,193,7,0.12);
-    overflow: hidden;
-    border-radius: 5px;
-  }
-
-  .processing-fill {
-    width: 0%;
-    height: 100%;
-    background: #ffc107;
-    box-shadow: 0 0 12px rgba(255,193,7,0.8);
-    transition: width 0.7s ease;
-  }
-
-  .processing-code {
-    margin-top: 18px;
-    color: #555;
-    font-size: 10px;
-    letter-spacing: 2px;
-  }
-
-  /* FINAL FACULTY CARD */
-
-  .teacher-card {
-    width: min(88%, 520px);
-    padding: 34px 26px;
-    border: 1px solid rgba(255, 193, 7, 0.45);
-    border-radius: 18px;
-    background: rgba(10, 10, 10, 0.94);
-    box-shadow:
-      0 0 35px rgba(255, 193, 7, 0.12),
-      inset 0 0 25px rgba(255, 193, 7, 0.025);
-    text-align: center;
-    position: relative;
-    animation: finalReveal 0.7s ease forwards;
-  }
-
-  .faculty-badge {
-    display: inline-block;
-    padding: 6px 13px;
-    border: 1px solid rgba(255, 193, 7, 0.55);
-    border-radius: 20px;
-    color: #ffc107;
-    font-size: 11px;
-    letter-spacing: 2px;
-    margin-bottom: 25px;
-  }
-
-  .teacher-status {
-    font-size: 13px;
-    color: #aaa;
-    letter-spacing: 1.5px;
-    margin-bottom: 18px;
-  }
-
-  .teacher-line {
-    width: 70%;
-    height: 2px;
-    margin: 0 auto 25px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      #ffc107,
-      transparent
-    );
-    box-shadow: 0 0 10px rgba(255,193,7,0.35);
-  }
-
-  .teacher-welcome {
-    font-size: 12px;
-    color: #999;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-
-  .teacher-name {
-    font-size: clamp(21px, 5vw, 30px);
-    font-weight: bold;
-    color: #ffc107;
-    text-shadow: 0 0 14px rgba(255,193,7,0.35);
-    margin-bottom: 12px;
-  }
-
-  .teacher-subtitle {
-    color: #aaa;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    margin-bottom: 30px;
-  }
-
-  #teacherJoinBtn {
-    border: 1px solid #ffc107;
-    background: transparent;
-    color: #ffc107;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: 0.25s;
-  }
-
-  #teacherJoinBtn:hover {
-    background: #ffc107;
-    color: #050505;
-    box-shadow: 0 0 20px rgba(255,193,7,0.35);
-  }
-
-  @keyframes processingIn {
-    from {
-      opacity: 0;
-      transform: scale(0.97);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes finalReveal {
-    from {
-      opacity: 0;
-      transform: scale(0.96) translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-</style>
+<!-- ================= FACULTY ACCESS SYSTEM - START ================= -->
 
 <script>
 (function () {
 
-  const teacherParams =
-    new URLSearchParams(window.location.search);
+  /* ================= FACULTY CODES ================= */
 
-  const teacherCode =
-    teacherParams.get("t");
-
-  const teachers = {
+  const faculty = {
     "F01G": "Dr. Gulshan Makkad",
     "F02S": "Shraddha Joshi",
     "F03S": "Suyesha Chavhan",
@@ -652,134 +457,825 @@ function joinGroup() {
     "F05B": "Biswajit Saha"
   };
 
-  /*
-    If there is no valid teacher code,
-    do nothing.
-    Student system remains untouched.
-  */
+  const code = new URLSearchParams(window.location.search).get("t");
 
-  if (!teacherCode || !teachers[teacherCode]) {
-    return;
-  }
+  // If this is not a faculty link, do nothing.
+  if (!code || !faculty[code]) return;
 
-  const teacherName = teachers[teacherCode];
+  const teacherName = faculty[code];
 
-  /* Create teacher overlay */
+  /* ================= FACULTY DESIGN ================= */
 
-  const teacherScreen =
-    document.createElement("div");
+  const style = document.createElement("style");
 
-  teacherScreen.id = "teacherAccess";
+  style.innerHTML = `
 
-  teacherScreen.innerHTML = `
-    <div class="faculty-processing">
+    #facultyAccess {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
 
-      <div class="processing-title">
-        JIT • CSE SECTION H
-      </div>
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(0, 180, 255, 0.12),
+          transparent 38%
+        ),
+        #03070d;
 
-      <div class="processing-status" id="processingStatus">
-        INITIALIZING FACULTY PORTAL...
-      </div>
+      color: white;
 
-      <div class="processing-bar">
-        <div class="processing-fill" id="processingFill"></div>
-      </div>
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-      <div class="processing-code">
-        FACULTY AUTHENTICATION
-      </div>
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    </div>
+      overflow: hidden;
+    }
+
+
+    /* ---------- BACKGROUND GRID ---------- */
+
+    .faculty-grid {
+      position: absolute;
+      inset: 0;
+
+      background-image:
+        linear-gradient(
+          rgba(0, 180, 255, 0.045) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(0, 180, 255, 0.045) 1px,
+          transparent 1px
+        );
+
+      background-size: 45px 45px;
+
+      animation:
+        gridMove 8s linear infinite;
+    }
+
+    @keyframes gridMove {
+
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(45px);
+      }
+
+    }
+
+
+    /* ---------- PARTICLES ---------- */
+
+    .faculty-particle {
+
+      position: absolute;
+
+      width: 3px;
+      height: 3px;
+
+      background: #54d9ff;
+
+      border-radius: 50%;
+
+      opacity: 0.7;
+
+      animation:
+        floatParticle 4s infinite ease-in-out;
+    }
+
+    .p1 {
+      left: 18%;
+      top: 25%;
+      animation-delay: .2s;
+    }
+
+    .p2 {
+      left: 75%;
+      top: 20%;
+      animation-delay: 1s;
+    }
+
+    .p3 {
+      left: 82%;
+      top: 70%;
+      animation-delay: 1.8s;
+    }
+
+    .p4 {
+      left: 12%;
+      top: 72%;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes floatParticle {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: .2;
+      }
+
+      50% {
+        transform: translateY(-18px);
+        opacity: 1;
+      }
+
+    }
+
+
+    /* ---------- MAIN AREA ---------- */
+
+    .faculty-center {
+
+      position: relative;
+
+      width: min(90vw, 430px);
+
+      text-align: center;
+
+      z-index: 5;
+    }
+
+
+    /* ---------- TOP TITLE ---------- */
+
+    .faculty-top {
+
+      font-size: 11px;
+
+      letter-spacing: 4px;
+
+      color: #6fdfff;
+
+      margin-bottom: 35px;
+
+      opacity: 0;
+
+      transform: translateY(10px);
+
+      animation:
+        fadeIn .6s forwards .2s;
+    }
+
+
+    /* ---------- SCANNER ---------- */
+
+    .scanner {
+
+      width: 145px;
+      height: 145px;
+
+      margin: auto;
+
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* Outer rotating ring */
+
+    .scanner-ring {
+
+      position: absolute;
+
+      inset: 0;
+
+      border:
+        1px solid
+        rgba(80, 215, 255, .35);
+
+      border-radius: 50%;
+
+      animation:
+        rotateRing 2s linear infinite;
+    }
+
+
+    .scanner-ring::before,
+    .scanner-ring::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 18px;
+      height: 18px;
+
+      border:
+        2px solid
+        #53d9ff;
+    }
+
+
+    .scanner-ring::before {
+
+      top: -2px;
+      left: 50%;
+
+      border-bottom: none;
+      border-left: none;
+    }
+
+
+    .scanner-ring::after {
+
+      bottom: -2px;
+      right: 50%;
+
+      border-top: none;
+      border-right: none;
+    }
+
+
+    /* Inner rotating ring */
+
+    .scanner-ring2 {
+
+      position: absolute;
+
+      width: 105px;
+      height: 105px;
+
+      border:
+        1px dashed
+        rgba(255, 190, 70, .45);
+
+      border-radius: 50%;
+
+      animation:
+        rotateRingReverse 3s linear infinite;
+    }
+
+
+    /* Scanner center */
+
+    .scanner-core {
+
+      width: 46px;
+      height: 46px;
+
+      border-radius: 12px;
+
+      border:
+        1px solid
+        rgba(90, 220, 255, .8);
+
+      box-shadow:
+        0 0 25px
+        rgba(60, 210, 255, .35);
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      color: #62ddff;
+
+      font-size: 20px;
+
+      animation:
+        corePulse 1.2s infinite;
+    }
+
+
+    @keyframes rotateRing {
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+
+    @keyframes rotateRingReverse {
+
+      to {
+        transform: rotate(-360deg);
+      }
+
+    }
+
+
+    @keyframes corePulse {
+
+      50% {
+
+        transform: scale(1.12);
+
+        box-shadow:
+          0 0 38px
+          rgba(60, 210, 255, .6);
+      }
+
+    }
+
+
+    /* ---------- STATUS TEXT ---------- */
+
+    .faculty-status {
+
+      margin-top: 30px;
+
+      min-height: 24px;
+
+      font-size: 12px;
+
+      letter-spacing: 2px;
+
+      color: #b9cbd5;
+    }
+
+
+    /* ---------- FINAL CARD ---------- */
+
+    .faculty-card {
+
+      display: none;
+
+      position: relative;
+
+      padding:
+        38px
+        25px
+        30px;
+
+      border:
+        1px solid
+        rgba(83, 217, 255, .35);
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(12, 25, 36, .96),
+          rgba(4, 10, 16, .98)
+        );
+
+      box-shadow:
+
+        0 0 35px
+        rgba(40, 190, 255, .10),
+
+        inset 0 0 35px
+        rgba(40, 190, 255, .035);
+
+      overflow: hidden;
+    }
+
+
+    /* Moving light scan */
+
+    .faculty-card::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+      right: 0;
+
+      top: -100%;
+
+      height: 2px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          #55dcff,
+          white,
+          #55dcff,
+          transparent
+        );
+
+      box-shadow:
+        0 0 20px
+        #55dcff;
+
+      animation:
+        scanDown 2s ease forwards;
+    }
+
+
+    @keyframes scanDown {
+
+      to {
+        top: 100%;
+      }
+
+    }
+
+
+    /* ---------- CARD CONTENT ---------- */
+
+    .access-label {
+
+      color: #62ddff;
+
+      font-size: 11px;
+
+      letter-spacing: 4px;
+
+      margin-bottom: 13px;
+    }
+
+
+    .verified {
+
+      display: inline-block;
+
+      font-size: 11px;
+
+      color: #ffd36a;
+
+      letter-spacing: 2px;
+
+      border:
+        1px solid
+        rgba(255, 211, 106, .35);
+
+      padding:
+        6px
+        12px;
+
+      border-radius: 20px;
+
+      margin-bottom: 28px;
+    }
+
+
+    .welcome {
+
+      font-size: 13px;
+
+      letter-spacing: 5px;
+
+      color: #8da4b1;
+
+      margin-bottom: 10px;
+    }
+
+
+    .teacher-name {
+
+      font-size:
+        clamp(
+          25px,
+          7vw,
+          34px
+        );
+
+      font-weight: 600;
+
+      line-height: 1.2;
+
+      margin-bottom: 17px;
+
+      color: white;
+
+      text-shadow:
+        0 0 18px
+        rgba(100, 215, 255, .25);
+    }
+
+
+    .faculty-meta {
+
+      font-size: 10px;
+
+      letter-spacing: 2px;
+
+      color: #6f8795;
+
+      margin-bottom: 30px;
+    }
+
+
+    /* ---------- JOIN GROUP BUTTON ---------- */
+
+    .faculty-button {
+
+      width: 100%;
+
+      padding: 14px;
+
+      border:
+        1px solid
+        rgba(84, 217, 255, .5);
+
+      border-radius: 10px;
+
+      background:
+        rgba(50, 190, 240, .08);
+
+      color: #7ee4ff;
+
+      font-size: 12px;
+
+      letter-spacing: 3px;
+
+      cursor: pointer;
+
+      transition: .25s;
+    }
+
+
+    .faculty-button:hover {
+
+      background:
+        rgba(50, 190, 240, .18);
+
+      box-shadow:
+        0 0 25px
+        rgba(50, 190, 240, .2);
+    }
+
+
+    /* ---------- ANIMATIONS ---------- */
+
+    @keyframes fadeIn {
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+
+    }
+
+
+    .fadeOut {
+
+      animation:
+        fadeOut .45s forwards;
+    }
+
+
+    @keyframes fadeOut {
+
+      to {
+
+        opacity: 0;
+
+        transform:
+          scale(.92);
+      }
+
+    }
+
+
+    .revealCard {
+
+      display: block !important;
+
+      animation:
+        cardReveal
+        .8s
+        cubic-bezier(.2,.8,.2,1)
+        forwards;
+    }
+
+
+    @keyframes cardReveal {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(25px)
+          scale(.94);
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+
+    }
+
   `;
 
-  document.body.appendChild(teacherScreen);
+  document.head.appendChild(style);
 
-  const status =
-    document.getElementById("processingStatus");
 
-  const fill =
-    document.getElementById("processingFill");
+  /* ================= BUILD FACULTY SCREEN ================= */
 
-  /* SHORT PROCESSING — ABOUT 2.5 SECONDS */
+  const screen =
+    document.createElement("div");
 
-  setTimeout(() => {
-    status.textContent =
-      "SCANNING FACULTY ID...";
-    fill.style.width = "38%";
-  }, 500);
+  screen.id =
+    "facultyAccess";
 
-  setTimeout(() => {
-    status.textContent =
-      "VERIFYING ACCESS...";
-    fill.style.width = "72%";
-  }, 1100);
 
-  setTimeout(() => {
-    status.textContent =
-      "ACCESS GRANTED ✓";
-    fill.style.width = "100%";
-  }, 1700);
+  screen.innerHTML = `
 
-  /* Show final faculty card */
+    <div class="faculty-grid"></div>
 
-  setTimeout(() => {
 
-    teacherScreen.innerHTML = `
-      <div class="teacher-card">
+    <div class="faculty-particle p1"></div>
+    <div class="faculty-particle p2"></div>
+    <div class="faculty-particle p3"></div>
+    <div class="faculty-particle p4"></div>
 
-        <div class="faculty-badge">
+
+    <div class="faculty-center">
+
+
+      <!-- SECTION H ALWAYS VISIBLE -->
+
+      <div class="faculty-top">
+        JIT • CSE • SECTION H
+      </div>
+
+
+      <!-- SCANNER -->
+
+      <div id="facultyScanner">
+
+        <div class="scanner">
+
+          <div class="scanner-ring"></div>
+
+          <div class="scanner-ring2"></div>
+
+          <div class="scanner-core">
+            ✦
+          </div>
+
+        </div>
+
+
+        <div
+          class="faculty-status"
+          id="facultyStatus"
+        >
+          CONNECTING TO FACULTY SYSTEM...
+        </div>
+
+      </div>
+
+
+      <!-- FINAL FACULTY CARD -->
+
+      <div
+        class="faculty-card"
+        id="facultyCard"
+      >
+
+        <div class="access-label">
           FACULTY ACCESS
         </div>
 
-        <div class="teacher-status">
-          ACCESS GRANTED ✓
+
+        <div class="verified">
+          ● IDENTITY VERIFIED
         </div>
 
-        <div class="teacher-line"></div>
 
-        <div class="teacher-welcome">
+        <div class="welcome">
           WELCOME,
         </div>
+
 
         <div class="teacher-name">
           ${teacherName}
         </div>
 
-        <div class="teacher-subtitle">
-          CSE • SECTION H • FACULTY PORTAL
+
+        <div class="faculty-meta">
+          JIT • CSE • SECTION H • FACULTY PORTAL
         </div>
 
-        <button id="teacherJoinBtn">
-          ENTER GROUP →
+
+        <button
+          class="faculty-button"
+          onclick="
+            window.location.href=
+            'https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN'
+          "
+        >
+          JOIN GROUP →
         </button>
 
       </div>
-    `;
 
-    document
-      .getElementById("teacherJoinBtn")
-      .addEventListener("click", function () {
+    </div>
 
-        this.textContent = "CONNECTING...";
+  `;
+
+
+  document.body.appendChild(screen);
+
+
+  /* ================= ANIMATION CONTROL ================= */
+
+  const status =
+    document.getElementById(
+      "facultyStatus"
+    );
+
+  const scanner =
+    document.getElementById(
+      "facultyScanner"
+    );
+
+  const card =
+    document.getElementById(
+      "facultyCard"
+    );
+
+
+  const messages = [
+
+    "CONNECTING TO FACULTY SYSTEM...",
+
+    "SCANNING FACULTY ID...",
+
+    "IDENTITY DETECTED...",
+
+    "VERIFYING ACCESS...",
+
+    "ACCESS VERIFIED ✓"
+
+  ];
+
+
+  let i = 0;
+
+
+  const interval =
+    setInterval(() => {
+
+
+      if (i < messages.length) {
+
+        status.textContent =
+          messages[i];
+
+        i++;
+
+      }
+
+
+      if (i === messages.length) {
+
+        clearInterval(interval);
+
 
         setTimeout(() => {
 
-          window.location.href =
-            "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
 
-        }, 700);
+          scanner.classList.add(
+            "fadeOut"
+          );
 
-      });
 
-  }, 2500);
+          setTimeout(() => {
+
+            scanner.style.display =
+              "none";
+
+            card.classList.add(
+              "revealCard"
+            );
+
+          }, 450);
+
+
+        }, 500);
+
+      }
+
+
+    }, 650);
 
 })();
+
 </script>
 
-<!-- ================================= -->
-<!-- TEACHER ACCESS SYSTEM - END -->
-<!-- ================================= -->
-    
+<!-- ================= FACULTY ACCESS SYSTEM - END ================= -->
+       
 </body>
 </html>
