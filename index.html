@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,263 +7,595 @@
 <title>CSE • Section H</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    min-height: 100vh;
+:root{
+    --cyan:#00f6ff;
+    --violet:#8b5cf6;
+    --white:#f5f7ff;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     background:
-        radial-gradient(circle at center, #062018 0%, #020807 45%, #000 100%);
-    color: #00ff9d;
-    font-family: "Courier New", monospace;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+        radial-gradient(circle at 50% 45%,rgba(139,92,246,.14),transparent 28%),
+        radial-gradient(circle at 20% 20%,rgba(0,246,255,.08),transparent 25%),
+        #020207;
+
+    color:white;
+    font-family:"Courier New",monospace;
 }
 
-/* Moving scan lines */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0,255,157,0.025) 0px,
-        rgba(0,255,157,0.025) 1px,
-        transparent 1px,
-        transparent 4px
+/* =========================
+   DIGITAL GRID
+========================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+
+    background-image:
+        linear-gradient(rgba(0,246,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,246,255,.035) 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    animation:gridMove 12s linear infinite;
+}
+
+@keyframes gridMove{
+    from{transform:translateY(0)}
+    to{transform:translateY(45px)}
+}
+
+/* =========================
+   FLOATING PARTICLES
+========================= */
+
+.particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+.particles span{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 10px var(--cyan);
+    opacity:.6;
+
+    animation:float 5s linear infinite;
+}
+
+.particles span:nth-child(1){left:12%;top:20%;animation-delay:0s}
+.particles span:nth-child(2){left:82%;top:15%;animation-delay:1s}
+.particles span:nth-child(3){left:25%;top:80%;animation-delay:2s}
+.particles span:nth-child(4){left:75%;top:72%;animation-delay:3s}
+.particles span:nth-child(5){left:50%;top:10%;animation-delay:1.5s}
+.particles span:nth-child(6){left:90%;top:50%;animation-delay:2.5s}
+
+@keyframes float{
+    0%{
+        transform:translateY(30px);
+        opacity:0;
+    }
+    30%{opacity:.8}
+    70%{opacity:.5}
+    100%{
+        transform:translateY(-80px);
+        opacity:0;
+    }
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:92%;
+    max-width:520px;
+    position:relative;
+    z-index:5;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card{
+    position:relative;
+    padding:40px 27px;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(12,12,25,.91),
+            rgba(3,5,12,.96)
+        );
+
+    border:1px solid rgba(0,246,255,.25);
+    border-radius:20px;
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+        0 0 30px rgba(0,246,255,.07),
+        0 0 80px rgba(139,92,246,.06),
+        inset 0 0 40px rgba(139,92,246,.025);
+
+    animation:cardIn 1s ease;
+}
+
+@keyframes cardIn{
+    from{
+        opacity:0;
+        transform:scale(.94) translateY(20px);
+        filter:blur(8px);
+    }
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+        filter:blur(0);
+    }
+}
+
+/* Tech corners */
+
+.card::before,
+.card::after{
+    content:"";
+    position:absolute;
+    width:32px;
+    height:32px;
+    border-color:var(--cyan);
+    opacity:.75;
+}
+
+.card::before{
+    top:13px;
+    left:13px;
+    border-top:1px solid;
+    border-left:1px solid;
+}
+
+.card::after{
+    right:13px;
+    bottom:13px;
+    border-right:1px solid;
+    border-bottom:1px solid;
+}
+
+/* =========================
+   TOP LABEL
+========================= */
+
+.small{
+    font-size:11px;
+    letter-spacing:4px;
+    color:rgba(255,255,255,.48);
+}
+
+/* =========================
+   LOADING
+========================= */
+
+#loadingText{
+    margin:25px 0 24px;
+
+    font-size:28px;
+    letter-spacing:3px;
+
+    color:var(--cyan);
+
+    text-shadow:
+        0 0 8px var(--cyan),
+        0 0 25px rgba(0,246,255,.5);
+
+    animation:textPulse 1.5s infinite alternate;
+}
+
+@keyframes textPulse{
+    from{opacity:.7}
+    to{opacity:1}
+}
+
+.status{
+    min-height:20px;
+
+    font-size:11px;
+    letter-spacing:1.5px;
+
+    color:rgba(255,255,255,.5);
+}
+
+/* =========================
+   ENERGY BAR
+========================= */
+
+.loader{
+    position:relative;
+    width:100%;
+    height:5px;
+
+    margin:30px 0 18px;
+
+    overflow:hidden;
+
+    border-radius:10px;
+    background:rgba(255,255,255,.05);
+}
+
+.progress{
+    width:0;
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--violet),
+            var(--cyan),
+            white
+        );
+
+    box-shadow:
+        0 0 10px var(--cyan),
+        0 0 25px var(--violet);
+
+    animation:loading 3s ease-in-out forwards;
+}
+
+@keyframes loading{
+    from{width:0}
+    to{width:100%}
+}
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome{
+    display:none;
+
+    animation:welcomeIn 1.2s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes welcomeIn{
+    0%{
+        opacity:0;
+        transform:translateY(25px) scale(.95);
+        filter:blur(8px);
+    }
+
+    60%{
+        opacity:1;
+        transform:translateY(-3px) scale(1.01);
+        filter:blur(0);
+    }
+
+    100%{
+        transform:translateY(0) scale(1);
+    }
+}
+
+/* =========================
+   ACCESS BADGE
+========================= */
+
+.access{
+    display:inline-block;
+
+    padding:7px 15px;
+
+    border:1px solid rgba(0,246,255,.35);
+    border-radius:30px;
+
+    color:var(--cyan);
+
+    font-size:10px;
+    letter-spacing:2px;
+
+    background:rgba(0,246,255,.035);
+
+    box-shadow:
+        0 0 15px rgba(0,246,255,.08);
+
+    animation:badgePulse 2s infinite;
+}
+
+@keyframes badgePulse{
+    50%{
+        box-shadow:
+            0 0 25px rgba(0,246,255,.2);
+    }
+}
+
+/* =========================
+   NAME
+========================= */
+
+.welcomeText{
+    margin-top:28px;
+
+    font-size:13px;
+    letter-spacing:3px;
+
+    color:rgba(255,255,255,.45);
+}
+
+.name{
+    display:block;
+
+    margin-top:9px;
+
+    font-family:Arial,sans-serif;
+
+    font-size:34px;
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    color:#fff;
+
+    text-shadow:
+        0 0 7px rgba(255,255,255,.7),
+        0 0 20px rgba(0,246,255,.35);
+
+    animation:nameGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes nameGlow{
+    from{
+        text-shadow:
+            0 0 6px rgba(255,255,255,.5),
+            0 0 15px rgba(0,246,255,.25);
+    }
+
+    to{
+        text-shadow:
+            0 0 8px white,
+            0 0 28px rgba(0,246,255,.55);
+    }
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section{
+    margin-top:13px;
+
+    font-size:10px;
+    letter-spacing:4px;
+
+    color:var(--cyan);
+    opacity:.8;
+}
+
+/* =========================
+   SUBTITLE
+========================= */
+
+.subtitle{
+    margin-top:27px;
+
+    font-size:11px;
+    line-height:1.9;
+    letter-spacing:1.5px;
+
+    color:rgba(255,255,255,.43);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button{
+    position:relative;
+
+    margin-top:30px;
+    padding:14px 30px;
+
+    border:1px solid var(--cyan);
+    border-radius:8px;
+
+    background:rgba(0,246,255,.035);
+
+    color:var(--cyan);
+
+    font-family:"Courier New",monospace;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:2px;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    transition:.3s ease;
+
+    box-shadow:
+        0 0 15px rgba(0,246,255,.08);
+}
+
+button::before{
+    content:"";
+
+    position:absolute;
+    top:0;
+    left:-100%;
+
+    width:100%;
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,246,255,.2),
+        transparent
     );
-    animation: scan 8s linear infinite;
+
+    animation:buttonScan 2.5s infinite;
 }
 
-@keyframes scan {
-    from { transform: translateY(0); }
-    to { transform: translateY(20px); }
+@keyframes buttonScan{
+    0%{left:-100%}
+    50%{left:100%}
+    100%{left:100%}
 }
 
-.container {
-    width: 90%;
-    max-width: 520px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
+button:hover{
+    color:#020207;
 
-.card {
-    padding: 35px 25px;
-    border: 1px solid rgba(0,255,157,0.35);
-    background: rgba(0,20,14,0.45);
+    background:var(--cyan);
+
     box-shadow:
-        0 0 20px rgba(0,255,157,0.08),
-        inset 0 0 30px rgba(0,255,157,0.03);
-    backdrop-filter: blur(5px);
+        0 0 12px var(--cyan),
+        0 0 35px rgba(0,246,255,.35);
+
+    transform:translateY(-3px);
 }
 
-.small {
-    font-size: 13px;
-    letter-spacing: 4px;
-    opacity: 0.7;
-    margin-bottom: 22px;
+button:active{
+    transform:scale(.96);
 }
 
-h1 {
-    font-size: 31px;
-    line-height: 1.3;
-    letter-spacing: 3px;
-    margin: 18px 0;
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    margin-top:27px;
+
+    font-size:9px;
+    letter-spacing:2px;
+
+    color:rgba(255,255,255,.2);
 }
 
-.glow {
-    text-shadow:
-        0 0 5px #00ff9d,
-        0 0 15px rgba(0,255,157,0.7);
-}
+/* =========================
+   MOBILE
+========================= */
 
-.status {
-    font-size: 14px;
-    margin-top: 20px;
-    min-height: 20px;
-    opacity: 0.8;
-}
+@media(max-width:420px){
 
-.loader {
-    width: 100%;
-    height: 7px;
-    border: 1px solid #00ff9d;
-    margin: 28px 0 18px;
-    padding: 1px;
-}
-
-.progress {
-    height: 100%;
-    width: 0%;
-    background: #00ff9d;
-    box-shadow: 0 0 12px #00ff9d;
-    animation: loading 3s ease-in-out forwards;
-}
-
-@keyframes loading {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-
-.welcome {
-    display: none;
-    animation: appear 1s ease forwards;
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.97);
+    .card{
+        padding:36px 21px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+    #loadingText{
+        font-size:24px;
+    }
+
+    .name{
+        font-size:31px;
+    }
+
+    .subtitle{
+        font-size:10px;
     }
 }
 
-.access {
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 25px;
-    animation: blink 1.5s infinite;
-}
-
-@keyframes blink {
-    50% { opacity: 0.45; }
-}
-
-.name {
-    color: #ffffff;
-    text-shadow:
-        0 0 5px #ffffff,
-        0 0 15px rgba(0,255,157,0.7);
-}
-
-.subtitle {
-    margin-top: 20px;
-    font-size: 13px;
-    letter-spacing: 2px;
-    opacity: 0.65;
-    line-height: 1.7;
-}
-
-button {
-    margin-top: 30px;
-    padding: 15px 28px;
-    background: transparent;
-    color: #00ff9d;
-    border: 1px solid #00ff9d;
-    font-family: "Courier New", monospace;
-    font-size: 15px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: 0.25s ease;
-    box-shadow: 0 0 0 rgba(0,255,157,0);
-}
-
-button:hover {
-    background: #00ff9d;
-    color: #000;
-    box-shadow:
-        0 0 10px #00ff9d,
-        0 0 25px rgba(0,255,157,0.5);
-    transform: translateY(-2px);
-}
-
-button:active {
-    transform: scale(0.96);
-}
-
-.footer {
-    margin-top: 25px;
-    font-size: 10px;
-    letter-spacing: 2px;
-    opacity: 0.3;
-}
-
-.error {
-    color: #ff5c5c;
-    text-shadow: 0 0 10px rgba(255,92,92,0.5);
-}
 </style>
 </head>
 
 <body>
 
+<!-- PARTICLES -->
+
+<div class="particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <!-- LOADING SCREEN -->
-        <div id="loadingScreen">
+<!-- =========================
+     LOADING SCREEN
+========================= -->
 
-            <div class="small">
-                CSE • SECTION H
-            </div>
+<div id="loadingScreen">
 
-            <h1 class="glow" id="loadingText">
-                INITIALIZING...
-            </h1>
-
-            <div class="loader">
-                <div class="progress"></div>
-            </div>
-
-            <div class="status" id="status">
-                CONNECTING TO CSE NETWORK...
-            </div>
-
-        </div>
-
-
-        <!-- WELCOME SCREEN -->
-        <div class="welcome" id="welcomeScreen">
-
-            <div class="access">
-                ACCESS GRANTED ✓
-            </div>
-
-            <div class="small">
-                INVITATION VERIFIED
-            </div>
-
-            <h1 class="glow">
-                WELCOME,<br>
-                <span class="name" id="studentName">
-                    STUDENT
-                </span>
-            </h1>
-
-            <div class="small">
-                CSE — SECTION H
-            </div>
-
-            <p class="subtitle">
-                YOUR DIGITAL CLASSROOM AWAITS.
-                <br>
-                YOUR SEAT IS READY.
-            </p>
-
-            <button id="joinButton" onclick="joinGroup()">
-                ENTER GROUP →
-            </button>
-
-            <div class="footer">
-                SECTION H • DIGITAL ENTRY PORTAL
-            </div>
-
-        </div>
-
+    <div class="small">
+        CSE • SECTION H
     </div>
 
+    <h1 id="loadingText">
+        INITIALIZING...
+    </h1>
+
+    <div class="loader">
+        <div class="progress"></div>
+    </div>
+
+    <div class="status" id="status">
+        CONNECTING TO CSE NETWORK...
+    </div>
+
+</div>
+
+
+<!-- =========================
+     WELCOME SCREEN
+========================= -->
+
+<div class="welcome" id="welcomeScreen">
+
+    <div class="access">
+        ACCESS GRANTED ✓
+    </div>
+
+    <div class="welcomeText">
+        WELCOME,
+    </div>
+
+    <span class="name" id="studentName">
+        STUDENT
+    </span>
+
+    <div class="section">
+        CSE • SECTION H
+    </div>
+
+    <p class="subtitle">
+        YOUR DIGITAL CLASSROOM AWAITS.
+        <br>
+        YOUR SEAT IS READY.
+    </p>
+
+    <button id="joinButton" onclick="joinGroup()">
+        JOIN GROUP →
+    </button>
+
+    <div class="footer">
+        SECTION H • DIGITAL ENTRY PORTAL
+    </div>
+
+</div>
+
+</div>
 </div>
 
 
@@ -272,8 +603,7 @@ button:active {
 
 /* ==========================================
    STUDENT DATABASE
-   CODE → FULL NAME
-   ========================================== */
+========================================== */
 
 const students = {
 
@@ -345,100 +675,116 @@ const students = {
 
 
 /* ==========================================
-   GET STUDENT CODE FROM URL
-   Example:
-   ?u=C8R4
-   ========================================== */
+   GET STUDENT CODE
+========================================== */
 
-const params = new URLSearchParams(window.location.search);
+const params =
+    new URLSearchParams(window.location.search);
 
-const studentCode = params.get("u");
+const studentCode =
+    params.get("u");
 
-const fullName = students[studentCode];
-
-
-/* ==========================================
-   GET FIRST NAME
-   ========================================== */
+const fullName =
+    students[studentCode];
 
 let firstName = "STUDENT";
 
-if (fullName) {
-    firstName = fullName.split(" ")[0];
+if(fullName){
+    firstName =
+        fullName.split(" ")[0];
 }
 
 
 /* ==========================================
-   LOADING TEXT ANIMATION
-   ========================================== */
+   LOADING ANIMATION
+========================================== */
 
-const status = document.getElementById("status");
-const loadingText = document.getElementById("loadingText");
+const status =
+    document.getElementById("status");
 
-setTimeout(() => {
-    loadingText.textContent = "VERIFYING...";
-    status.textContent = "VERIFYING INVITATION...";
-}, 1000);
+const loadingText =
+    document.getElementById("loadingText");
 
-setTimeout(() => {
-    loadingText.textContent = "AUTHENTICATING...";
-    status.textContent = "AUTHENTICATING USER...";
-}, 2000);
 
 setTimeout(() => {
-    loadingText.textContent = "ACCESS GRANTED";
-    status.textContent = "INVITATION VERIFIED ✓";
-}, 3000);
+
+    loadingText.textContent =
+        "VERIFYING...";
+
+    status.textContent =
+        "VERIFYING INVITATION...";
+
+},1000);
+
+
+setTimeout(() => {
+
+    loadingText.textContent =
+        "AUTHENTICATING...";
+
+    status.textContent =
+        "AUTHENTICATING USER...";
+
+},2000);
+
+
+setTimeout(() => {
+
+    loadingText.textContent =
+        "ACCESS GRANTED";
+
+    status.textContent =
+        "INVITATION VERIFIED ✓";
+
+},3000);
 
 
 /* ==========================================
    SHOW WELCOME SCREEN
-   ========================================== */
+========================================== */
 
 setTimeout(() => {
 
-    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById(
+        "loadingScreen"
+    ).style.display = "none";
 
     const welcomeScreen =
-        document.getElementById("welcomeScreen");
+        document.getElementById(
+            "welcomeScreen"
+        );
 
-    welcomeScreen.style.display = "block";
+    welcomeScreen.style.display =
+        "block";
 
+    document.getElementById(
+        "studentName"
+    ).textContent =
+        firstName.toUpperCase();
 
-    if (fullName) {
-
-        document.getElementById("studentName")
-            .textContent = firstName.toUpperCase();
-
-    } else {
-
-        document.getElementById("studentName")
-            .textContent = "STUDENT";
-
-        document.getElementById("status")
-            .textContent = "INVALID INVITATION";
-
-    }
-
-}, 3500);
+},3500);
 
 
 /* ==========================================
    WHATSAPP GROUP
-   ========================================== */
+========================================== */
 
-function joinGroup() {
+function joinGroup(){
 
-    const button = document.getElementById("joinButton");
+    const button =
+        document.getElementById(
+            "joinButton"
+        );
 
-    button.textContent = "CONNECTING...";
+    button.textContent =
+        "CONNECTING...";
 
     setTimeout(() => {
 
         window.location.href =
         "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
 
-    }, 500);
+    },500);
 
 }
 
@@ -446,6 +792,13 @@ function joinGroup() {
 
 </body>
 </html>
+
+
+        
+
+            
+
+
 <!-- ================= FACULTY ACCESS SYSTEM - START ================= -->
 
 <script>
