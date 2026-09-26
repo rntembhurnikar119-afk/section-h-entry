@@ -1,446 +1,568 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>CSE • Section H</title>
+<!-- STUDENT ANIMATION — replace only your old STUDENT block with this -->
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+  #studentScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    overflow: hidden;
+    background: #02050a;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 
-body {
-    min-height: 100vh;
+  #studentScreen * {
+    box-sizing: border-box;
+  }
+
+  .s-bg {
+    position: absolute;
+    inset: 0;
     background:
-        radial-gradient(circle at center, #062018 0%, #020807 45%, #000 100%);
-    color: #00ff9d;
-    font-family: "Courier New", monospace;
+      radial-gradient(circle at center, rgba(0,180,255,.10), transparent 35%),
+      radial-gradient(circle at 50% 50%, rgba(255,30,60,.08), transparent 55%),
+      #02050a;
+  }
+
+  .s-grid {
+    position: absolute;
+    inset: -50%;
+    opacity: .18;
+    background-image:
+      linear-gradient(rgba(0,210,255,.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,210,255,.18) 1px, transparent 1px);
+    background-size: 55px 55px;
+    transform: perspective(500px) rotateX(62deg);
+    animation: gridMove 5s linear infinite;
+  }
+
+  @keyframes gridMove {
+    from { transform: perspective(500px) rotateX(62deg) translateY(0); }
+    to   { transform: perspective(500px) rotateX(62deg) translateY(55px); }
+  }
+
+  .s-top {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #72e8ff;
+    opacity: .85;
+  }
+
+  .s-center {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-}
+  }
 
-/* Moving scan lines */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0,255,157,0.025) 0px,
-        rgba(0,255,157,0.025) 1px,
-        transparent 1px,
-        transparent 4px
-    );
-    animation: scan 8s linear infinite;
-}
-
-@keyframes scan {
-    from { transform: translateY(0); }
-    to { transform: translateY(20px); }
-}
-
-.container {
-    width: 90%;
-    max-width: 520px;
-    text-align: center;
+  .s-hud {
     position: relative;
-    z-index: 2;
-}
+    width: 230px;
+    height: 230px;
+    opacity: 0;
+    transform: scale(.5);
+  }
 
-.card {
-    padding: 35px 25px;
-    border: 1px solid rgba(0,255,157,0.35);
-    background: rgba(0,20,14,0.45);
+  .s-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(0,220,255,.55);
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(0,210,255,.22);
+  }
+
+  .s-ring:nth-child(1) {
+    animation: rotate1 4s linear infinite;
+  }
+
+  .s-ring:nth-child(2) {
+    inset: 18px;
+    border-style: dashed;
+    border-color: rgba(255,45,75,.7);
+    animation: rotate2 3s linear infinite;
+  }
+
+  .s-ring:nth-child(3) {
+    inset: 40px;
+    border-color: rgba(0,220,255,.35);
+    animation: rotate1 2s linear infinite reverse;
+  }
+
+  @keyframes rotate1 {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes rotate2 {
+    to { transform: rotate(-360deg); }
+  }
+
+  .s-cross {
+    position: absolute;
+    inset: 50%;
+    width: 180px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #54eaff, transparent);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px #00d9ff;
+  }
+
+  .s-cross.v {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .s-scanline {
+    position: absolute;
+    left: 12%;
+    width: 76%;
+    height: 2px;
+    top: 20%;
+    background: #63edff;
+    box-shadow: 0 0 15px #00d9ff;
+    opacity: .8;
+    animation: scan 1.4s ease-in-out infinite;
+  }
+
+  @keyframes scan {
+    0%,100% { top: 18%; }
+    50% { top: 82%; }
+  }
+
+  .s-web {
+    position: absolute;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background:
+      repeating-conic-gradient(
+        from 0deg,
+        rgba(0,220,255,.32) 0deg 1deg,
+        transparent 1deg 20deg
+      );
+    -webkit-mask: radial-gradient(circle, transparent 28%, #000 29%, #000 31%, transparent 32%, #000 33%, #000 35%, transparent 36%, #000 37%, #000 39%, transparent 40%, #000 41%, #000 43%, transparent 44%);
+    mask: radial-gradient(circle, transparent 28%, #000 29%, #000 31%, transparent 32%, #000 33%, #000 35%, transparent 36%, #000 37%, #000 39%, transparent 40%, #000 41%, #000 43%, transparent 44%);
+    opacity: .7;
+    animation: webSpin 10s linear infinite;
+  }
+
+  @keyframes webSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .s-status {
+    position: absolute;
+    bottom: 23%;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #8defff;
+    text-shadow: 0 0 10px #00d9ff;
+    opacity: 0;
+  }
+
+  .s-verified {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    transform: scale(.7);
+  }
+
+  .s-check {
+    font-size: 32px;
+    color: #65f4ff;
+    text-shadow: 0 0 20px #00d9ff;
+  }
+
+  .s-verified-text {
+    margin-top: 12px;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: white;
+  }
+
+  .s-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .s-card {
+    position: absolute;
+    width: min(88%, 430px);
+    padding: 30px 24px 28px;
+    text-align: center;
+    border: 1px solid rgba(0,220,255,.55);
+    border-radius: 20px;
+    background: rgba(3,10,18,.82);
+    backdrop-filter: blur(12px);
     box-shadow:
-        0 0 20px rgba(0,255,157,0.08),
-        inset 0 0 30px rgba(0,255,157,0.03);
-    backdrop-filter: blur(5px);
-}
+      0 0 35px rgba(0,210,255,.18),
+      inset 0 0 35px rgba(0,210,255,.05);
+    opacity: 0;
+    transform: translateY(25px) scale(.94);
+  }
 
-.small {
+  .s-card-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #65eaff;
+    margin-bottom: 15px;
+  }
+
+  .s-dot {
+    color: #55f3ff;
+  }
+
+  .s-welcome {
     font-size: 13px;
     letter-spacing: 4px;
-    opacity: 0.7;
-    margin-bottom: 22px;
-}
+    color: #a9b8c3;
+    margin-bottom: 5px;
+  }
 
-h1 {
-    font-size: 31px;
-    line-height: 1.3;
-    letter-spacing: 3px;
-    margin: 18px 0;
-}
-
-.glow {
-    text-shadow:
-        0 0 5px #00ff9d,
-        0 0 15px rgba(0,255,157,0.7);
-}
-
-.status {
-    font-size: 14px;
-    margin-top: 20px;
-    min-height: 20px;
-    opacity: 0.8;
-}
-
-.loader {
-    width: 100%;
-    height: 7px;
-    border: 1px solid #00ff9d;
-    margin: 28px 0 18px;
-    padding: 1px;
-}
-
-.progress {
-    height: 100%;
-    width: 0%;
-    background: #00ff9d;
-    box-shadow: 0 0 12px #00ff9d;
-    animation: loading 3s ease-in-out forwards;
-}
-
-@keyframes loading {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-
-.welcome {
-    display: none;
-    animation: appear 1s ease forwards;
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.97);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.access {
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 25px;
-    animation: blink 1.5s infinite;
-}
-
-@keyframes blink {
-    50% { opacity: 0.45; }
-}
-
-.name {
-    color: #ffffff;
-    text-shadow:
-        0 0 5px #ffffff,
-        0 0 15px rgba(0,255,157,0.7);
-}
-
-.subtitle {
-    margin-top: 20px;
-    font-size: 13px;
+  .s-name {
+    font-size: clamp(30px, 8vw, 48px);
+    font-weight: 800;
     letter-spacing: 2px;
-    opacity: 0.65;
-    line-height: 1.7;
-}
+    color: white;
+    text-shadow:
+      0 0 10px rgba(0,220,255,.5),
+      0 0 25px rgba(0,220,255,.25);
+    margin-bottom: 12px;
+  }
 
-button {
-    margin-top: 30px;
-    padding: 15px 28px;
-    background: transparent;
-    color: #00ff9d;
-    border: 1px solid #00ff9d;
-    font-family: "Courier New", monospace;
-    font-size: 15px;
+  .s-meta {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #78d9e8;
+    margin-bottom: 25px;
+  }
+
+  .s-join {
+    display: inline-block;
+    padding: 13px 25px;
+    border: 1px solid #45eaff;
+    border-radius: 9px;
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
     font-weight: bold;
     letter-spacing: 2px;
-    cursor: pointer;
-    transition: 0.25s ease;
-    box-shadow: 0 0 0 rgba(0,255,157,0);
-}
+    background: rgba(0,210,255,.08);
+    box-shadow: 0 0 18px rgba(0,210,255,.2);
+    transition: .25s;
+  }
 
-button:hover {
-    background: #00ff9d;
-    color: #000;
-    box-shadow:
-        0 0 10px #00ff9d,
-        0 0 25px rgba(0,255,157,0.5);
+  .s-join:hover {
+    background: rgba(0,210,255,.2);
+    box-shadow: 0 0 30px rgba(0,210,255,.45);
     transform: translateY(-2px);
-}
+  }
 
-button:active {
-    transform: scale(0.96);
-}
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #65eaff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00d9ff;
+    animation: floatUp linear infinite;
+  }
 
-.footer {
-    margin-top: 25px;
-    font-size: 10px;
-    letter-spacing: 2px;
-    opacity: 0.3;
-}
+  @keyframes floatUp {
+    from {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    to {
+      transform: translateY(-10vh);
+      opacity: 0;
+    }
+  }
 
-.error {
-    color: #ff5c5c;
-    text-shadow: 0 0 10px rgba(255,92,92,0.5);
-}
-</style>
-</head>
+  .show-hud {
+    animation: hudIn .6s forwards;
+  }
 
-<body>
+  @keyframes hudIn {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
-<div class="container">
+  .show-status {
+    animation: statusIn .35s forwards;
+  }
 
-    <div class="card">
+  @keyframes statusIn {
+    to { opacity: 1; }
+  }
 
-        <!-- LOADING SCREEN -->
-        <div id="loadingScreen">
+  .verified-show {
+    animation: verifiedIn .55s forwards;
+  }
 
-            <div class="small">
-                CSE • SECTION H
-            </div>
+  @keyframes verifiedIn {
+    50% {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
-            <h1 class="glow" id="loadingText">
-                INITIALIZING...
-            </h1>
+  .flash-show {
+    animation: flashIn .35s forwards;
+  }
 
-            <div class="loader">
-                <div class="progress"></div>
-            </div>
+  @keyframes flashIn {
+    0% { opacity: 0; }
+    25% { opacity: .8; }
+    100% { opacity: 0; }
+  }
 
-            <div class="status" id="status">
-                CONNECTING TO CSE NETWORK...
-            </div>
+  .card-show {
+    animation: cardIn .65s cubic-bezier(.2,.8,.2,1) forwards;
+  }
 
-        </div>
+  @keyframes cardIn {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 
+  .s-red-line {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,35,70,.8), transparent);
+    box-shadow: 0 0 10px rgba(255,35,70,.5);
+    opacity: .45;
+  }
 
-        <!-- WELCOME SCREEN -->
-        <div class="welcome" id="welcomeScreen">
+  .s-red-line.one { top: 18%; }
+  .s-red-line.two { bottom: 18%; }
 
-            <div class="access">
-                ACCESS GRANTED ✓
-            </div>
-
-            <div class="small">
-                INVITATION VERIFIED
-            </div>
-
-            <h1 class="glow">
-                WELCOME,<br>
-                <span class="name" id="studentName">
-                    STUDENT
-                </span>
-            </h1>
-
-            <div class="small">
-                CSE — SECTION H
-            </div>
-
-            <p class="subtitle">
-                YOUR DIGITAL CLASSROOM AWAITS.
-                <br>
-                YOUR SEAT IS READY.
-            </p>
-
-            <button id="joinButton" onclick="joinGroup()">
-                ENTER GROUP →
-            </button>
-
-            <div class="footer">
-                SECTION H • DIGITAL ENTRY PORTAL
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-/* ==========================================
-   STUDENT DATABASE
-   CODE → FULL NAME
-   ========================================== */
-
-const students = {
-
-    "2F23": "AACHAL SANJAY JESWANI",
-    "JE2E": "AASHU NARESH BOKDE",
-    "4JQQ": "ABDUL HADI ANEEQUR RAHMAN",
-    "7Y7J": "ADITI HEMANTRAO SHRIRAO",
-    "SGC0": "ADITI NARESH MARJIYE",
-    "N8TQ": "ADITI VIJAY WANKHEDE",
-    "3Z8L": "ADITYA KISOR CHINCHKHEDE",
-    "9FJX": "ADITYA SANJAY CHAURE",
-    "K7W4": "ADVAIT ATUL SONTAKKE",
-    "H5QK": "AISHWARYA KISHOR DHOTE",
-    "Q8N3": "AMAN ANILKUMAR FULPER",
-    "T4ZM": "ANANDI RAJESH YAWALE",
-    "6RPK": "ANANYA GAJANAN VAIDYA",
-    "W2GX": "ANGAT DHARMENDRA UKEY",
-    "M9C7": "ANIRUDDHA DILIP SAKHARE",
-    "X4A8": "ANIRUDDHA PRAKASH BURBURE",
-    "P6VD": "ANJALI ANIL AHUJA",
-    "B3KY": "ANSHUL GANESH HOOD",
-    "R7F2": "ANUSHKA LAXMAN CHANDEKAR",
-    "D9QM": "ANUSHKA RITESH GUPTA",
-    "V5X8": "ARJUN PRAKASHLAL KHATRI",
-    "J2NL": "ARYAN PRADIP WAHANE",
-    "C8R4": "ARYAN PRAMOD TEMBHURNIKAR",
-    "G6TP": "ASHRAF ALI WAHID ALI",
-    "Y3MK": "ATHARVA JAYENDRA WAROKAR",
-    "L8Q5": "BHAKTI MANOHARJI KAKDE",
-    "F4ZN": "CHAITALI VISHNU JATKAR",
-    "Q7BW": "CHANCHAL SANJAY JESWANI",
-    "K3HX": "CHETAN PRADIP RADE",
-    "8MVD": "CHITRANSH DIPAK SARODE",
-    "T6QR": "DAKSHESH LALCHAND KATIYAR",
-    "N4YK": "DARSHANA SATISH BERAD",
-    "W8P3": "DEEP KISHOR KATHEWAR",
-    "R2GF": "DEVANG SHAILENDRA PATLE",
-    "5XQN": "DEVEHI PRAKASH KAMBLE",
-    "J7LC": "DHAIRYA KAMAL JESWANI",
-    "M3VK": "DHANASHRI JIVAN DALAL",
-    "9QTB": "DHIRAJ RAVINDRA NANDURKAR",
-    "F6RW": "DIKSHANT NISHANT BORKAR",
-    "X8KM": "DRUSHTI DHYANESHWAR MOHADIKAR",
-    "C5YP": "EJNAIN BABAR SHEIKH",
-    "V9LD": "GAGAN RAJU KHADE",
-    "H2QW": "GANESH SUNIL JHAMANI",
-    "P8F4": "GARIMA DEEPAK GEHANI",
-    "Z3NK": "GAURAV GHANSHYAM SAWARKAR",
-    "R6XJ": "GAURAV SANTOSH LACHHAWANI",
-    "K9MT": "GAURAV SUNIL BORKAR",
-    "B4QZ": "GAURI GAJANAN MELE",
-    "Y7PC": "GUNESH WAMAN KHOTELE",
-    "D5VR": "GUNJAN RAJENDRA PALIWAL",
-    "L2XG": "HARSH RAKESH PATIL",
-    "Q9KF": "HARSHAL SURESH HEMNANI",
-    "M6TB": "HARSHITA RAJUSING RATHOD",
-    "8RWP": "HARSHITA VIJAY JANBANDHU",
-    "F3QY": "HARSHVARDHAN RAJESH WASNIK",
-    "N7VC": "HARSHVARDHAN SATISHRAO SUKHE",
-    "X4PJ": "HIMANSHI KAWDU SONTAKKE",
-    "G8RM": "HIMANSHU JAGDISH TAJANE",
-    "T2KF": "HRUSHALI PRAVIN AHIR",
-    "W5QN": "HRUSHIKESH SANJAY BARATE",
-    "C7LX": "ISHIKA DAMODHAR MULE",
-    "P4ZG": "ISHIKA NARENDRA ADMANE",
-    "Y8RB": "JANHVI VIJAY DHANORKAR"
-
-};
-
-
-/* ==========================================
-   GET STUDENT CODE FROM URL
-   Example:
-   ?u=C8R4
-   ========================================== */
-
-const params = new URLSearchParams(window.location.search);
-
-const studentCode = params.get("u");
-
-const fullName = students[studentCode];
-
-
-/* ==========================================
-   GET FIRST NAME
-   ========================================== */
-
-let firstName = "STUDENT";
-
-if (fullName) {
-    firstName = fullName.split(" ")[0];
-}
-
-
-/* ==========================================
-   LOADING TEXT ANIMATION
-   ========================================== */
-
-const status = document.getElementById("status");
-const loadingText = document.getElementById("loadingText");
-
-setTimeout(() => {
-    loadingText.textContent = "VERIFYING...";
-    status.textContent = "VERIFYING INVITATION...";
-}, 1000);
-
-setTimeout(() => {
-    loadingText.textContent = "AUTHENTICATING...";
-    status.textContent = "AUTHENTICATING USER...";
-}, 2000);
-
-setTimeout(() => {
-    loadingText.textContent = "ACCESS GRANTED";
-    status.textContent = "INVITATION VERIFIED ✓";
-}, 3000);
-
-
-/* ==========================================
-   SHOW WELCOME SCREEN
-   ========================================== */
-
-setTimeout(() => {
-
-    document.getElementById("loadingScreen").style.display = "none";
-
-    const welcomeScreen =
-        document.getElementById("welcomeScreen");
-
-    welcomeScreen.style.display = "block";
-
-
-    if (fullName) {
-
-        document.getElementById("studentName")
-            .textContent = firstName.toUpperCase();
-
-    } else {
-
-        document.getElementById("studentName")
-            .textContent = "STUDENT";
-
-        document.getElementById("status")
-            .textContent = "INVALID INVITATION";
-
+  @media(max-width:500px) {
+    .s-card {
+      padding: 26px 18px;
     }
 
-}, 3500);
+    .s-meta {
+      font-size: 9px;
+    }
+  }
+</style>
 
+<div id="studentScreen">
+  <div class="s-bg"></div>
+  <div class="s-grid"></div>
 
-/* ==========================================
-   WHATSAPP GROUP
-   ========================================== */
+  <div class="s-red-line one"></div>
+  <div class="s-red-line two"></div>
 
-function joinGroup() {
+  <div class="s-top">JIT • CSE • SECTION H</div>
 
-    const button = document.getElementById("joinButton");
+  <div class="s-center">
 
-    button.textContent = "CONNECTING...";
+    <div class="s-hud" id="studentHud">
+      <div class="s-ring"></div>
+      <div class="s-ring"></div>
+      <div class="s-ring"></div>
+      <div class="s-web"></div>
+      <div class="s-cross"></div>
+      <div class="s-cross v"></div>
+      <div class="s-scanline"></div>
+    </div>
 
-    setTimeout(() => {
+    <div class="s-verified" id="studentVerified">
+      <div class="s-check">✓</div>
+      <div class="s-verified-text">STUDENT ID VERIFIED</div>
+    </div>
 
-        window.location.href =
-        "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
+    <div class="s-card" id="studentCard">
+      <div class="s-card-title">
+        <span class="s-dot">●</span> STUDENT ACCESS
+      </div>
 
-    }, 500);
+      <div class="s-welcome">WELCOME,</div>
 
-}
+      <div class="s-name" id="studentName">ARYAN</div>
 
+      <div class="s-meta">
+        JIT • CSE • SECTION H
+      </div>
+
+      <a
+        class="s-join"
+        href="https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN"
+        target="_blank"
+      >
+        JOIN GROUP →
+      </a>
+    </div>
+
+  </div>
+
+  <div class="s-status" id="studentStatus">
+    INITIALIZING STUDENT ACCESS...
+  </div>
+
+  <div class="s-flash" id="studentFlash"></div>
+</div>
+
+<script>
+(function () {
+
+  const students = {
+    "2F23": "AACHAL",
+    "JE2E": "AASHU",
+    "4JQQ": "ABDUL",
+    "7Y7J": "ADITI",
+    "SGC0": "ADITI",
+    "N8TQ": "ADITI",
+    "3Z8L": "ADITYA",
+    "9FJX": "ADITYA",
+    "K7W4": "ADVAIT",
+    "H5QK": "AISHWARYA",
+    "Q8N3": "AMAN",
+    "T4ZM": "ANANDI",
+    "6RPK": "ANANYA",
+    "W2GX": "ANGAT",
+    "M9C7": "ANIRUDDHA",
+    "X4A8": "ANIRUDDHA",
+    "P6VD": "ANJALI",
+    "B3KY": "ANSHUL",
+    "R7F2": "ANUSHKA",
+    "D9QM": "ANUSHKA",
+    "V5X8": "ARJUN",
+    "J2NL": "ARYAN",
+    "C8R4": "ARYAN",
+    "G6TP": "ASHRAF",
+    "Y3MK": "ATHARVA",
+    "L8Q5": "BHAKTI",
+    "F4ZN": "CHAITALI",
+    "Q7BW": "CHANCHAL",
+    "K3HX": "CHETAN",
+    "8MVD": "CHITRANSH",
+    "T6QR": "DAKSHESH",
+    "N4YK": "DARSHANA",
+    "W8P3": "DEEP",
+    "R2GF": "DEVANG",
+    "5XQN": "DEVEHI",
+    "J7LC": "DHAIRYA",
+    "M3VK": "DHANASHRI",
+    "9QTB": "DHIRAJ",
+    "F6RW": "DIKSHANT",
+    "X8KM": "DRUSHTI",
+    "C5YP": "EJNAIN",
+    "V9LD": "GAGAN",
+    "H2QW": "GANESH",
+    "P8F4": "GARIMA",
+    "Z3NK": "GAURAV",
+    "R6XJ": "GAURAV",
+    "K9MT": "GAURAV",
+    "B4QZ": "GAURI",
+    "Y7PC": "GUNESH",
+    "D5VR": "GUNJAN",
+    "L2XG": "HARSH",
+    "Q9KF": "HARSHAL",
+    "M6TB": "HARSHITA",
+    "8RWP": "HARSHITA",
+    "F3QY": "HARSHVARDHAN",
+    "N7VC": "HARSHVARDHAN",
+    "X4PJ": "HIMANSHI",
+    "G8RM": "HIMANSHU",
+    "T2KF": "HRUSHALI",
+    "W5QN": "HRUSHIKESH",
+    "C7LX": "ISHIKA",
+    "P4ZG": "ISHIKA",
+    "Y8RB": "JANHVI"
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("u");
+
+  // Student animation only runs for ?u=CODE.
+  // Teacher system remains untouched when ?t=CODE is used.
+  if (!code || !students[code]) return;
+
+  const name = students[code];
+
+  document.getElementById("studentName").textContent = name;
+
+  const screen = document.getElementById("studentScreen");
+  const hud = document.getElementById("studentHud");
+  const status = document.getElementById("studentStatus");
+  const verified = document.getElementById("studentVerified");
+  const flash = document.getElementById("studentFlash");
+  const card = document.getElementById("studentCard");
+
+  // Particles
+  for (let i = 0; i < 55; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDuration = (3 + Math.random() * 5) + "s";
+    p.style.animationDelay = (-Math.random() * 6) + "s";
+    p.style.opacity = Math.random();
+    screen.appendChild(p);
+  }
+
+  // Stage 1
+  setTimeout(() => {
+    status.textContent = "INITIALIZING STUDENT ACCESS...";
+    status.classList.add("show-status");
+  }, 150);
+
+  // Stage 2
+  setTimeout(() => {
+    status.textContent = "SCANNING STUDENT ID...";
+    hud.classList.add("show-hud");
+  }, 650);
+
+  setTimeout(() => {
+    status.textContent = "IDENTITY DETECTED...";
+  }, 1200);
+
+  setTimeout(() => {
+    status.textContent = "VERIFYING ACCESS...";
+  }, 1650);
+
+  // Stage 3
+  setTimeout(() => {
+    status.style.opacity = "0";
+    flash.classList.add("flash-show");
+    verified.classList.add("verified-show");
+  }, 2100);
+
+  // Stage 4
+  setTimeout(() => {
+    hud.style.opacity = "0";
+    verified.style.opacity = "0";
+    status.style.opacity = "0";
+    card.classList.add("card-show");
+  }, 2750);
+
+})();
 </script>
 <!-- ================= FACULTY ACCESS SYSTEM - START ================= -->
 
