@@ -4,91 +4,195 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CSE Section H</title>
+<title>CSE • Section H</title>
 
 <style>
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
     min-height: 100vh;
-    background: #050505;
+    background:
+        radial-gradient(circle at center, #062018 0%, #020807 45%, #000 100%);
     color: #00ff9d;
-    font-family: monospace;
+    font-family: "Courier New", monospace;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
 }
 
+/* Moving scan lines */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,255,157,0.025) 0px,
+        rgba(0,255,157,0.025) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    from { transform: translateY(0); }
+    to { transform: translateY(20px); }
+}
+
 .container {
     width: 90%;
-    max-width: 500px;
+    max-width: 520px;
     text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    padding: 35px 25px;
+    border: 1px solid rgba(0,255,157,0.35);
+    background: rgba(0,20,14,0.45);
+    box-shadow:
+        0 0 20px rgba(0,255,157,0.08),
+        inset 0 0 30px rgba(0,255,157,0.03);
+    backdrop-filter: blur(5px);
 }
 
 .small {
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 4px;
     opacity: 0.7;
+    margin-bottom: 22px;
 }
 
 h1 {
-    font-size: 32px;
+    font-size: 31px;
+    line-height: 1.3;
     letter-spacing: 3px;
-    margin: 25px 0;
+    margin: 18px 0;
+}
+
+.glow {
+    text-shadow:
+        0 0 5px #00ff9d,
+        0 0 15px rgba(0,255,157,0.7);
+}
+
+.status {
+    font-size: 14px;
+    margin-top: 20px;
+    min-height: 20px;
+    opacity: 0.8;
 }
 
 .loader {
     width: 100%;
-    height: 6px;
+    height: 7px;
     border: 1px solid #00ff9d;
-    margin: 25px 0;
+    margin: 28px 0 18px;
+    padding: 1px;
 }
 
 .progress {
     height: 100%;
     width: 0%;
     background: #00ff9d;
-    animation: loading 3s forwards;
+    box-shadow: 0 0 12px #00ff9d;
+    animation: loading 3s ease-in-out forwards;
 }
 
 @keyframes loading {
-    to {
-        width: 100%;
-    }
-}
-
-.status {
-    font-size: 15px;
-    margin: 15px 0;
+    from { width: 0%; }
+    to { width: 100%; }
 }
 
 .welcome {
     display: none;
+    animation: appear 1s ease forwards;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.access {
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.45; }
+}
+
+.name {
+    color: #ffffff;
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 15px rgba(0,255,157,0.7);
+}
+
+.subtitle {
+    margin-top: 20px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    opacity: 0.65;
+    line-height: 1.7;
 }
 
 button {
     margin-top: 30px;
-    padding: 15px 30px;
+    padding: 15px 28px;
     background: transparent;
     color: #00ff9d;
     border: 1px solid #00ff9d;
-    font-family: monospace;
-    font-size: 16px;
+    font-family: "Courier New", monospace;
+    font-size: 15px;
+    font-weight: bold;
     letter-spacing: 2px;
     cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 0 0 rgba(0,255,157,0);
+}
+
+button:hover {
+    background: #00ff9d;
+    color: #000;
+    box-shadow:
+        0 0 10px #00ff9d,
+        0 0 25px rgba(0,255,157,0.5);
+    transform: translateY(-2px);
 }
 
 button:active {
-    background: #00ff9d;
-    color: #000;
+    transform: scale(0.96);
 }
 
-.glow {t
-    text-shadow: 
+.footer {
+    margin-top: 25px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.3;
+}
+
+.error {
+    color: #ff5c5c;
+    text-shadow: 0 0 10px rgba(255,92,92,0.5);
+}
 </style>
 </head>
 
@@ -96,56 +200,244 @@ button:active {
 
 <div class="container">
 
-    <div id="loadingScreen">
-        <div class="small">CSE • SECTION H</div>
+    <div class="card">
 
-        <h1 class="glow">INITIALIZING...</h1>
+        <!-- LOADING SCREEN -->
+        <div id="loadingScreen">
 
-        <div class="loader">
-            <div class="progress"></div>
+            <div class="small">
+                CSE • SECTION H
+            </div>
+
+            <h1 class="glow" id="loadingText">
+                INITIALIZING...
+            </h1>
+
+            <div class="loader">
+                <div class="progress"></div>
+            </div>
+
+            <div class="status" id="status">
+                CONNECTING TO CSE NETWORK...
+            </div>
+
         </div>
 
-        <div class="status" id="status">
-            VERIFYING ACCESS...
+
+        <!-- WELCOME SCREEN -->
+        <div class="welcome" id="welcomeScreen">
+
+            <div class="access">
+                ACCESS GRANTED ✓
+            </div>
+
+            <div class="small">
+                INVITATION VERIFIED
+            </div>
+
+            <h1 class="glow">
+                WELCOME,<br>
+                <span class="name" id="studentName">
+                    STUDENT
+                </span>
+            </h1>
+
+            <div class="small">
+                CSE — SECTION H
+            </div>
+
+            <p class="subtitle">
+                YOUR DIGITAL CLASSROOM AWAITS.
+                <br>
+                YOUR SEAT IS READY.
+            </p>
+
+            <button id="joinButton" onclick="joinGroup()">
+                ENTER GROUP →
+            </button>
+
+            <div class="footer">
+                SECTION H • DIGITAL ENTRY PORTAL
+            </div>
+
         </div>
-    </div>
-
-    <div class="welcome" id="welcomeScreen">
-
-        <div class="small">ACCESS GRANTED ✓</div>
-
-        <h1 class="glow">
-            WELCOME TO<br>
-            CSE — SECTION H
-        </h1>
-
-        <p>
-            YOUR DIGITAL CLASSROOM AWAITS.
-        </p>
-
-        <button onclick="joinGroup()">
-            ENTER GROUP →
-        </button>
 
     </div>
 
 </div>
 
+
 <script>
 
-setTimeout(function() {
+/* ==========================================
+   STUDENT DATABASE
+   CODE → FULL NAME
+   ========================================== */
+
+const students = {
+
+    "2F23": "AACHAL SANJAY JESWANI",
+    "JE2E": "AASHU NARESH BOKDE",
+    "4JQQ": "ABDUL HADI ANEEQUR RAHMAN",
+    "7Y7J": "ADITI HEMANTRAO SHRIRAO",
+    "SGC0": "ADITI NARESH MARJIYE",
+    "N8TQ": "ADITI VIJAY WANKHEDE",
+    "3Z8L": "ADITYA KISOR CHINCHKHEDE",
+    "9FJX": "ADITYA SANJAY CHAURE",
+    "K7W4": "ADVAIT ATUL SONTAKKE",
+    "H5QK": "AISHWARYA KISHOR DHOTE",
+    "Q8N3": "AMAN ANILKUMAR FULPER",
+    "T4ZM": "ANANDI RAJESH YAWALE",
+    "6RPK": "ANANYA GAJANAN VAIDYA",
+    "W2GX": "ANGAT DHARMENDRA UKEY",
+    "M9C7": "ANIRUDDHA DILIP SAKHARE",
+    "X4A8": "ANIRUDDHA PRAKASH BURBURE",
+    "P6VD": "ANJALI ANIL AHUJA",
+    "B3KY": "ANSHUL GANESH HOOD",
+    "R7F2": "ANUSHKA LAXMAN CHANDEKAR",
+    "D9QM": "ANUSHKA RITESH GUPTA",
+    "V5X8": "ARJUN PRAKASHLAL KHATRI",
+    "J2NL": "ARYAN PRADIP WAHANE",
+    "C8R4": "ARYAN PRAMOD TEMBHURNIKAR",
+    "G6TP": "ASHRAF ALI WAHID ALI",
+    "Y3MK": "ATHARVA JAYENDRA WAROKAR",
+    "L8Q5": "BHAKTI MANOHARJI KAKDE",
+    "F4ZN": "CHAITALI VISHNU JATKAR",
+    "Q7BW": "CHANCHAL SANJAY JESWANI",
+    "K3HX": "CHETAN PRADIP RADE",
+    "8MVD": "CHITRANSH DIPAK SARODE",
+    "T6QR": "DAKSHESH LALCHAND KATIYAR",
+    "N4YK": "DARSHANA SATISH BERAD",
+    "W8P3": "DEEP KISHOR KATHEWAR",
+    "R2GF": "DEVANG SHAILENDRA PATLE",
+    "5XQN": "DEVEHI PRAKASH KAMBLE",
+    "J7LC": "DHAIRYA KAMAL JESWANI",
+    "M3VK": "DHANASHRI JIVAN DALAL",
+    "9QTB": "DHIRAJ RAVINDRA NANDURKAR",
+    "F6RW": "DIKSHANT NISHANT BORKAR",
+    "X8KM": "DRUSHTI DHYANESHWAR MOHADIKAR",
+    "C5YP": "EJNAIN BABAR SHEIKH",
+    "V9LD": "GAGAN RAJU KHADE",
+    "H2QW": "GANESH SUNIL JHAMANI",
+    "P8F4": "GARIMA DEEPAK GEHANI",
+    "Z3NK": "GAURAV GHANSHYAM SAWARKAR",
+    "R6XJ": "GAURAV SANTOSH LACHHAWANI",
+    "K9MT": "GAURAV SUNIL BORKAR",
+    "B4QZ": "GAURI GAJANAN MELE",
+    "Y7PC": "GUNESH WAMAN KHOTELE",
+    "D5VR": "GUNJAN RAJENDRA PALIWAL",
+    "L2XG": "HARSH RAKESH PATIL",
+    "Q9KF": "HARSHAL SURESH HEMNANI",
+    "M6TB": "HARSHITA RAJUSING RATHOD",
+    "8RWP": "HARSHITA VIJAY JANBANDHU",
+    "F3QY": "HARSHVARDHAN RAJESH WASNIK",
+    "N7VC": "HARSHVARDHAN SATISHRAO SUKHE",
+    "X4PJ": "HIMANSHI KAWDU SONTAKKE",
+    "G8RM": "HIMANSHU JAGDISH TAJANE",
+    "T2KF": "HRUSHALI PRAVIN AHIR",
+    "W5QN": "HRUSHIKESH SANJAY BARATE",
+    "C7LX": "ISHIKA DAMODHAR MULE",
+    "P4ZG": "ISHIKA NARENDRA ADMANE",
+    "Y8RB": "JANHVI VIJAY DHANORKAR"
+
+};
+
+
+/* ==========================================
+   GET STUDENT CODE FROM URL
+   Example:
+   ?u=C8R4
+   ========================================== */
+
+const params = new URLSearchParams(window.location.search);
+
+const studentCode = params.get("u");
+
+const fullName = students[studentCode];
+
+
+/* ==========================================
+   GET FIRST NAME
+   ========================================== */
+
+let firstName = "STUDENT";
+
+if (fullName) {
+    firstName = fullName.split(" ")[0];
+}
+
+
+/* ==========================================
+   LOADING TEXT ANIMATION
+   ========================================== */
+
+const status = document.getElementById("status");
+const loadingText = document.getElementById("loadingText");
+
+setTimeout(() => {
+    loadingText.textContent = "VERIFYING...";
+    status.textContent = "VERIFYING INVITATION...";
+}, 1000);
+
+setTimeout(() => {
+    loadingText.textContent = "AUTHENTICATING...";
+    status.textContent = "AUTHENTICATING USER...";
+}, 2000);
+
+setTimeout(() => {
+    loadingText.textContent = "ACCESS GRANTED";
+    status.textContent = "INVITATION VERIFIED ✓";
+}, 3000);
+
+
+/* ==========================================
+   SHOW WELCOME SCREEN
+   ========================================== */
+
+setTimeout(() => {
 
     document.getElementById("loadingScreen").style.display = "none";
 
-    document.getElementById("welcomeScreen").style.display = "block";
+    const welcomeScreen =
+        document.getElementById("welcomeScreen");
+
+    welcomeScreen.style.display = "block";
+
+
+    if (fullName) {
+
+        document.getElementById("studentName")
+            .textContent = firstName.toUpperCase();
+
+    } else {
+
+        document.getElementById("studentName")
+            .textContent = "STUDENT";
+
+        document.getElementById("status")
+            .textContent = "INVALID INVITATION";
+
+    }
 
 }, 3500);
 
 
+/* ==========================================
+   WHATSAPP GROUP
+   ========================================== */
+
 function joinGroup() {
 
-    window.location.href =
-    "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
+    const button = document.getElementById("joinButton");
+
+    button.textContent = "CONNECTING...";
+
+    setTimeout(() => {
+
+        window.location.href =
+        "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
+
+    }, 500);
 
 }
 
