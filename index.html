@@ -442,9 +442,9 @@ function joinGroup() {
 }
 
 </script>
-<!-- ============================= -->
+<!-- ================================= -->
 <!-- TEACHER ACCESS SYSTEM - START -->
-<!-- ============================= -->
+<!-- ================================= -->
 
 <style>
   #teacherAccess {
@@ -476,6 +476,56 @@ function joinGroup() {
     pointer-events: none;
   }
 
+  /* PROCESSING SCREEN */
+
+  .faculty-processing {
+    width: min(88%, 520px);
+    text-align: center;
+    position: relative;
+    animation: processingIn 0.5s ease;
+  }
+
+  .processing-title {
+    color: #ffc107;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 12px rgba(255,193,7,0.4);
+  }
+
+  .processing-status {
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    min-height: 18px;
+    margin-bottom: 18px;
+  }
+
+  .processing-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(255,193,7,0.12);
+    overflow: hidden;
+    border-radius: 5px;
+  }
+
+  .processing-fill {
+    width: 0%;
+    height: 100%;
+    background: #ffc107;
+    box-shadow: 0 0 12px rgba(255,193,7,0.8);
+    transition: width 0.7s ease;
+  }
+
+  .processing-code {
+    margin-top: 18px;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  /* FINAL FACULTY CARD */
+
   .teacher-card {
     width: min(88%, 520px);
     padding: 34px 26px;
@@ -487,6 +537,7 @@ function joinGroup() {
       inset 0 0 25px rgba(255, 193, 7, 0.025);
     text-align: center;
     position: relative;
+    animation: finalReveal 0.7s ease forwards;
   }
 
   .faculty-badge {
@@ -561,32 +612,25 @@ function joinGroup() {
     box-shadow: 0 0 20px rgba(255,193,7,0.35);
   }
 
-  .teacher-cursor {
-    display: inline-block;
-    width: 7px;
-    height: 14px;
-    background: #ffc107;
-    margin-left: 4px;
-    animation: teacherBlink 0.8s infinite;
-    vertical-align: middle;
-  }
-
-  @keyframes teacherBlink {
-    50% { opacity: 0; }
-  }
-
-  .teacher-fade {
-    animation: teacherFade 0.8s ease forwards;
-  }
-
-  @keyframes teacherFade {
+  @keyframes processingIn {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: scale(0.97);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: scale(1);
+    }
+  }
+
+  @keyframes finalReveal {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
     }
   }
 </style>
@@ -594,10 +638,12 @@ function joinGroup() {
 <script>
 (function () {
 
-  const teacherParams = new URLSearchParams(window.location.search);
-  const teacherCode = teacherParams.get("t");
+  const teacherParams =
+    new URLSearchParams(window.location.search);
 
-  // Teacher database
+  const teacherCode =
+    teacherParams.get("t");
+
   const teachers = {
     "F01G": "Dr. Gulshan Makkad",
     "F02S": "Shraddha Joshi",
@@ -606,81 +652,134 @@ function joinGroup() {
     "F05B": "Biswajit Saha"
   };
 
-  // If there is no teacher code, DO NOTHING.
-  // This keeps all existing student links working normally.
+  /*
+    If there is no valid teacher code,
+    do nothing.
+    Student system remains untouched.
+  */
+
   if (!teacherCode || !teachers[teacherCode]) {
     return;
   }
 
   const teacherName = teachers[teacherCode];
 
-  // Create teacher screen
-  const teacherScreen = document.createElement("div");
+  /* Create teacher overlay */
+
+  const teacherScreen =
+    document.createElement("div");
+
   teacherScreen.id = "teacherAccess";
 
   teacherScreen.innerHTML = `
-    <div class="teacher-card teacher-fade">
+    <div class="faculty-processing">
 
-      <div class="faculty-badge">
-        FACULTY ACCESS
+      <div class="processing-title">
+        JIT • CSE SECTION H
       </div>
 
-      <div class="teacher-status" id="teacherStatus">
-        AUTHENTICATING FACULTY...
+      <div class="processing-status" id="processingStatus">
+        INITIALIZING FACULTY PORTAL...
       </div>
 
-      <div class="teacher-line"></div>
-
-      <div class="teacher-welcome">
-        WELCOME,
+      <div class="processing-bar">
+        <div class="processing-fill" id="processingFill"></div>
       </div>
 
-      <div class="teacher-name">
-        ${teacherName}
+      <div class="processing-code">
+        FACULTY AUTHENTICATION
       </div>
-
-      <div class="teacher-subtitle">
-        CSE • SECTION H • FACULTY PORTAL
-      </div>
-
-      <button id="teacherJoinBtn">
-        ENTER GROUP →
-      </button>
 
     </div>
   `;
 
   document.body.appendChild(teacherScreen);
 
-  // Small premium loading sequence
-  const status = document.getElementById("teacherStatus");
+  const status =
+    document.getElementById("processingStatus");
+
+  const fill =
+    document.getElementById("processingFill");
+
+  /* SHORT PROCESSING — ABOUT 2.5 SECONDS */
 
   setTimeout(() => {
-    status.innerHTML = "VERIFYING FACULTY ACCESS...";
-  }, 900);
+    status.textContent =
+      "SCANNING FACULTY ID...";
+    fill.style.width = "38%";
+  }, 500);
 
   setTimeout(() => {
-    status.innerHTML = "ACCESS GRANTED ✓";
-  }, 1800);
+    status.textContent =
+      "VERIFYING ACCESS...";
+    fill.style.width = "72%";
+  }, 1100);
 
-  // WhatsApp group
-  document.getElementById("teacherJoinBtn").addEventListener("click", function () {
+  setTimeout(() => {
+    status.textContent =
+      "ACCESS GRANTED ✓";
+    fill.style.width = "100%";
+  }, 1700);
 
-    this.innerHTML = "CONNECTING...";
+  /* Show final faculty card */
 
-    setTimeout(() => {
-      window.location.href =
-        "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
-    }, 700);
+  setTimeout(() => {
 
-  });
+    teacherScreen.innerHTML = `
+      <div class="teacher-card">
+
+        <div class="faculty-badge">
+          FACULTY ACCESS
+        </div>
+
+        <div class="teacher-status">
+          ACCESS GRANTED ✓
+        </div>
+
+        <div class="teacher-line"></div>
+
+        <div class="teacher-welcome">
+          WELCOME,
+        </div>
+
+        <div class="teacher-name">
+          ${teacherName}
+        </div>
+
+        <div class="teacher-subtitle">
+          CSE • SECTION H • FACULTY PORTAL
+        </div>
+
+        <button id="teacherJoinBtn">
+          ENTER GROUP →
+        </button>
+
+      </div>
+    `;
+
+    document
+      .getElementById("teacherJoinBtn")
+      .addEventListener("click", function () {
+
+        this.textContent = "CONNECTING...";
+
+        setTimeout(() => {
+
+          window.location.href =
+            "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
+
+        }, 700);
+
+      });
+
+  }, 2500);
 
 })();
 </script>
 
-<!-- =========================== -->
+<!-- ================================= -->
 <!-- TEACHER ACCESS SYSTEM - END -->
-<!-- =========================== -->
+<!-- ================================= -->
     
 </body>
 </html>
