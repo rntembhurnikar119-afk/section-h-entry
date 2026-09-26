@@ -442,6 +442,245 @@ function joinGroup() {
 }
 
 </script>
+<!-- ============================= -->
+<!-- TEACHER ACCESS SYSTEM - START -->
+<!-- ============================= -->
 
+<style>
+  #teacherAccess {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at center, rgba(255, 193, 7, 0.08), transparent 45%),
+      #050505;
+    color: #f5f5f5;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+  }
+
+  #teacherAccess::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+    pointer-events: none;
+  }
+
+  .teacher-card {
+    width: min(88%, 520px);
+    padding: 34px 26px;
+    border: 1px solid rgba(255, 193, 7, 0.45);
+    border-radius: 18px;
+    background: rgba(10, 10, 10, 0.94);
+    box-shadow:
+      0 0 35px rgba(255, 193, 7, 0.12),
+      inset 0 0 25px rgba(255, 193, 7, 0.025);
+    text-align: center;
+    position: relative;
+  }
+
+  .faculty-badge {
+    display: inline-block;
+    padding: 6px 13px;
+    border: 1px solid rgba(255, 193, 7, 0.55);
+    border-radius: 20px;
+    color: #ffc107;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+  }
+
+  .teacher-status {
+    font-size: 13px;
+    color: #aaa;
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
+  }
+
+  .teacher-line {
+    width: 70%;
+    height: 2px;
+    margin: 0 auto 25px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      #ffc107,
+      transparent
+    );
+    box-shadow: 0 0 10px rgba(255,193,7,0.35);
+  }
+
+  .teacher-welcome {
+    font-size: 12px;
+    color: #999;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .teacher-name {
+    font-size: clamp(21px, 5vw, 30px);
+    font-weight: bold;
+    color: #ffc107;
+    text-shadow: 0 0 14px rgba(255,193,7,0.35);
+    margin-bottom: 12px;
+  }
+
+  .teacher-subtitle {
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 30px;
+  }
+
+  #teacherJoinBtn {
+    border: 1px solid #ffc107;
+    background: transparent;
+    color: #ffc107;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: 0.25s;
+  }
+
+  #teacherJoinBtn:hover {
+    background: #ffc107;
+    color: #050505;
+    box-shadow: 0 0 20px rgba(255,193,7,0.35);
+  }
+
+  .teacher-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    background: #ffc107;
+    margin-left: 4px;
+    animation: teacherBlink 0.8s infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes teacherBlink {
+    50% { opacity: 0; }
+  }
+
+  .teacher-fade {
+    animation: teacherFade 0.8s ease forwards;
+  }
+
+  @keyframes teacherFade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+(function () {
+
+  const teacherParams = new URLSearchParams(window.location.search);
+  const teacherCode = teacherParams.get("t");
+
+  // Teacher database
+  const teachers = {
+    "F01G": "Dr. Gulshan Makkad",
+    "F02S": "Shraddha Joshi",
+    "F03S": "Suyesha Chavhan",
+    "F04T": "Tejaswini Hirudkar",
+    "F05B": "Biswajit Saha"
+  };
+
+  // If there is no teacher code, DO NOTHING.
+  // This keeps all existing student links working normally.
+  if (!teacherCode || !teachers[teacherCode]) {
+    return;
+  }
+
+  const teacherName = teachers[teacherCode];
+
+  // Create teacher screen
+  const teacherScreen = document.createElement("div");
+  teacherScreen.id = "teacherAccess";
+
+  teacherScreen.innerHTML = `
+    <div class="teacher-card teacher-fade">
+
+      <div class="faculty-badge">
+        FACULTY ACCESS
+      </div>
+
+      <div class="teacher-status" id="teacherStatus">
+        AUTHENTICATING FACULTY...
+      </div>
+
+      <div class="teacher-line"></div>
+
+      <div class="teacher-welcome">
+        WELCOME,
+      </div>
+
+      <div class="teacher-name">
+        ${teacherName}
+      </div>
+
+      <div class="teacher-subtitle">
+        CSE • SECTION H • FACULTY PORTAL
+      </div>
+
+      <button id="teacherJoinBtn">
+        ENTER GROUP →
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(teacherScreen);
+
+  // Small premium loading sequence
+  const status = document.getElementById("teacherStatus");
+
+  setTimeout(() => {
+    status.innerHTML = "VERIFYING FACULTY ACCESS...";
+  }, 900);
+
+  setTimeout(() => {
+    status.innerHTML = "ACCESS GRANTED ✓";
+  }, 1800);
+
+  // WhatsApp group
+  document.getElementById("teacherJoinBtn").addEventListener("click", function () {
+
+    this.innerHTML = "CONNECTING...";
+
+    setTimeout(() => {
+      window.location.href =
+        "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
+    }, 700);
+
+  });
+
+})();
+</script>
+
+<!-- =========================== -->
+<!-- TEACHER ACCESS SYSTEM - END -->
+<!-- =========================== -->
+    
 </body>
 </html>
