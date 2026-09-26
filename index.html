@@ -1,631 +1,451 @@
-<!-- ================= STUDENT PREMIUM ENTRY ================= -->
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CSE • Section H</title>
+
 <style>
-#studentEntry{
-  position:fixed;
-  inset:0;
-  z-index:999999;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(0,180,255,.13),transparent 32%),
-    radial-gradient(circle at 20% 80%,rgba(255,40,90,.08),transparent 30%),
-    #03060b;
-  color:white;
-  font-family:Arial,Helvetica,sans-serif;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-#studentEntry *{
-  box-sizing:border-box;
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at center, #062018 0%, #020807 45%, #000 100%);
+    color: #00ff9d;
+    font-family: "Courier New", monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.se-grid{
-  position:absolute;
-  inset:-50%;
-  background-image:
-    linear-gradient(rgba(0,200,255,.055) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,200,255,.055) 1px,transparent 1px);
-  background-size:42px 42px;
-  transform:perspective(500px) rotateX(58deg) scale(1.5);
-  animation:seGrid 8s linear infinite;
+/* Moving scan lines */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,255,157,0.025) 0px,
+        rgba(0,255,157,0.025) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    animation: scan 8s linear infinite;
 }
 
-@keyframes seGrid{
-  from{transform:perspective(500px) rotateX(58deg) scale(1.5) translateY(0)}
-  to{transform:perspective(500px) rotateX(58deg) scale(1.5) translateY(42px)}
+@keyframes scan {
+    from { transform: translateY(0); }
+    to { transform: translateY(20px); }
 }
 
-.se-vignette{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle,transparent 35%,rgba(0,0,0,.75) 100%);
+.container {
+    width: 90%;
+    max-width: 520px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
 }
 
-.se-particles{
-  position:absolute;
-  inset:0;
+.card {
+    padding: 35px 25px;
+    border: 1px solid rgba(0,255,157,0.35);
+    background: rgba(0,20,14,0.45);
+    box-shadow:
+        0 0 20px rgba(0,255,157,0.08),
+        inset 0 0 30px rgba(0,255,157,0.03);
+    backdrop-filter: blur(5px);
 }
 
-.se-particle{
-  position:absolute;
-  width:3px;
-  height:3px;
-  border-radius:50%;
-  background:#69eaff;
-  box-shadow:0 0 10px #69eaff;
-  animation:seFloat linear infinite;
+.small {
+    font-size: 13px;
+    letter-spacing: 4px;
+    opacity: 0.7;
+    margin-bottom: 22px;
 }
 
-@keyframes seFloat{
-  from{transform:translateY(110vh);opacity:0}
-  15%{opacity:1}
-  85%{opacity:1}
-  to{transform:translateY(-10vh);opacity:0}
+h1 {
+    font-size: 31px;
+    line-height: 1.3;
+    letter-spacing: 3px;
+    margin: 18px 0;
 }
 
-/* TOP HUD */
-
-.se-top{
-  position:absolute;
-  top:24px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(90%,520px);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:10px;
-  letter-spacing:3px;
-  color:#78eaff;
-  opacity:.85;
+.glow {
+    text-shadow:
+        0 0 5px #00ff9d,
+        0 0 15px rgba(0,255,157,0.7);
 }
 
-.se-top span:last-child{
-  color:#fff;
+.status {
+    font-size: 14px;
+    margin-top: 20px;
+    min-height: 20px;
+    opacity: 0.8;
 }
 
-/* CENTER */
-
-.se-center{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
+.loader {
+    width: 100%;
+    height: 7px;
+    border: 1px solid #00ff9d;
+    margin: 28px 0 18px;
+    padding: 1px;
 }
 
-.se-scanner{
-  position:relative;
-  width:min(72vw,310px);
-  height:min(72vw,310px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #00ff9d;
+    box-shadow: 0 0 12px #00ff9d;
+    animation: loading 3s ease-in-out forwards;
 }
 
-.se-ring{
-  position:absolute;
-  border-radius:50%;
-  border:1px solid rgba(69,222,255,.5);
+@keyframes loading {
+    from { width: 0%; }
+    to { width: 100%; }
 }
 
-.se-ring.r1{
-  width:100%;
-  height:100%;
-  border-top-color:#72edff;
-  border-bottom-color:transparent;
-  animation:spin 3s linear infinite;
+.welcome {
+    display: none;
+    animation: appear 1s ease forwards;
 }
 
-.se-ring.r2{
-  width:82%;
-  height:82%;
-  border-right:2px solid #ff496e;
-  border-left-color:transparent;
-  animation:spinReverse 2.3s linear infinite;
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-.se-ring.r3{
-  width:63%;
-  height:63%;
-  border-top:1px solid white;
-  border-bottom:1px solid rgba(0,220,255,.8);
-  animation:spin 1.7s linear infinite;
+.access {
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    animation: blink 1.5s infinite;
 }
 
-@keyframes spin{
-  to{transform:rotate(360deg)}
+@keyframes blink {
+    50% { opacity: 0.45; }
 }
 
-@keyframes spinReverse{
-  to{transform:rotate(-360deg)}
+.name {
+    color: #ffffff;
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 15px rgba(0,255,157,0.7);
 }
 
-.se-core{
-  width:31%;
-  height:31%;
-  border-radius:50%;
-  background:
-    radial-gradient(circle,#fff 0%,#73edff 8%,#008fbd 30%,#03131c 68%);
-  box-shadow:
-    0 0 25px #00d9ff,
-    0 0 70px rgba(0,180,255,.7),
-    inset 0 0 25px #fff;
-  animation:corePulse 1.4s ease-in-out infinite;
+.subtitle {
+    margin-top: 20px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    opacity: 0.65;
+    line-height: 1.7;
 }
 
-@keyframes corePulse{
-  50%{
-    transform:scale(1.12);
-    box-shadow:0 0 40px #00d9ff,0 0 100px rgba(0,180,255,.8);
-  }
+button {
+    margin-top: 30px;
+    padding: 15px 28px;
+    background: transparent;
+    color: #00ff9d;
+    border: 1px solid #00ff9d;
+    font-family: "Courier New", monospace;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 0 0 rgba(0,255,157,0);
 }
 
-/* scanning line */
-
-.se-scanline{
-  position:absolute;
-  width:100%;
-  height:2px;
-  background:linear-gradient(90deg,transparent,#6ff5ff,transparent);
-  box-shadow:0 0 18px #00d9ff;
-  animation:scan 2s ease-in-out infinite;
+button:hover {
+    background: #00ff9d;
+    color: #000;
+    box-shadow:
+        0 0 10px #00ff9d,
+        0 0 25px rgba(0,255,157,0.5);
+    transform: translateY(-2px);
 }
 
-@keyframes scan{
-  0%,100%{transform:translateY(-120px);opacity:0}
-  20%{opacity:1}
-  50%{transform:translateY(120px);opacity:1}
-  80%{opacity:0}
+button:active {
+    transform: scale(0.96);
 }
 
-/* STATUS */
-
-.se-status{
-  margin-top:34px;
-  text-align:center;
-  width:90%;
+.footer {
+    margin-top: 25px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.3;
 }
 
-.se-status-main{
-  font-size:12px;
-  letter-spacing:3px;
-  color:#7deaff;
-  min-height:18px;
-  text-shadow:0 0 12px rgba(0,210,255,.7);
-}
-
-.se-progress{
-  width:min(75vw,280px);
-  height:3px;
-  margin:15px auto 0;
-  background:rgba(255,255,255,.1);
-  overflow:hidden;
-  border-radius:5px;
-}
-
-.se-progress-bar{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#00bfff,#fff);
-  box-shadow:0 0 12px #00d9ff;
-  transition:width .35s ease;
-}
-
-/* FINAL CARD */
-
-.se-final{
-  position:absolute;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:25px;
-  opacity:0;
-  transform:scale(.82);
-  pointer-events:none;
-  transition:1s cubic-bezier(.16,1,.3,1);
-}
-
-.se-final.show{
-  opacity:1;
-  transform:scale(1);
-}
-
-.se-card{
-  width:min(92vw,470px);
-  padding:38px 25px 32px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(91,231,255,.45);
-  border-radius:24px;
-  background:linear-gradient(
-    145deg,
-    rgba(8,25,37,.94),
-    rgba(3,8,15,.96)
-  );
-  box-shadow:
-    0 0 35px rgba(0,190,255,.18),
-    inset 0 0 45px rgba(0,150,255,.04);
-  backdrop-filter:blur(18px);
-}
-
-.se-card:before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-50%;
-  width:200%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,#7ef4ff,transparent);
-  box-shadow:0 0 15px #00d9ff;
-  animation:cardLine 2.5s linear infinite;
-}
-
-@keyframes cardLine{
-  from{transform:translateX(-30%)}
-  to{transform:translateX(30%)}
-}
-
-.se-check{
-  width:70px;
-  height:70px;
-  margin:0 auto 22px;
-  border-radius:50%;
-  border:1px solid #65eaff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:32px;
-  color:#6feeff;
-  box-shadow:0 0 25px rgba(0,210,255,.45);
-}
-
-.se-small{
-  font-size:10px;
-  letter-spacing:4px;
-  color:#72eaff;
-  margin-bottom:12px;
-}
-
-.se-welcome{
-  font-size:15px;
-  letter-spacing:5px;
-  color:#b8cbd3;
-  margin-bottom:7px;
-}
-
-.se-name{
-  font-size:clamp(42px,12vw,72px);
-  font-weight:900;
-  letter-spacing:2px;
-  line-height:1;
-  text-transform:uppercase;
-  background:linear-gradient(180deg,#fff,#7cecff);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  text-shadow:0 0 30px rgba(0,210,255,.25);
-  margin-bottom:18px;
-}
-
-.se-course{
-  font-size:11px;
-  letter-spacing:3px;
-  color:#8d9da5;
-  margin-bottom:28px;
-}
-
-.se-join{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  min-width:190px;
-  padding:13px 22px;
-  border:1px solid rgba(100,235,255,.55);
-  border-radius:50px;
-  color:#8beeff;
-  font-size:11px;
-  letter-spacing:3px;
-  background:rgba(0,180,255,.06);
-  box-shadow:0 0 20px rgba(0,190,255,.12);
-}
-
-/* ACCESS FLASH */
-
-.se-flash{
-  position:absolute;
-  inset:0;
-  background:white;
-  opacity:0;
-  pointer-events:none;
-}
-
-.se-flash.active{
-  animation:flash .5s ease-out;
-}
-
-@keyframes flash{
-  0%{opacity:0}
-  15%{opacity:.35}
-  100%{opacity:0}
+.error {
+    color: #ff5c5c;
+    text-shadow: 0 0 10px rgba(255,92,92,0.5);
 }
 </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <!-- LOADING SCREEN -->
+        <div id="loadingScreen">
+
+            <div class="small">
+                CSE • SECTION H
+            </div>
+
+            <h1 class="glow" id="loadingText">
+                INITIALIZING...
+            </h1>
+
+            <div class="loader">
+                <div class="progress"></div>
+            </div>
+
+            <div class="status" id="status">
+                CONNECTING TO CSE NETWORK...
+            </div>
+
+        </div>
 
 
-<div id="studentEntry">
+        <!-- WELCOME SCREEN -->
+        <div class="welcome" id="welcomeScreen">
 
-  <div class="se-grid"></div>
-  <div class="se-vignette"></div>
-  <div class="se-particles" id="seParticles"></div>
+            <div class="access">
+                ACCESS GRANTED ✓
+            </div>
 
-  <div class="se-top">
-    <span>JIT // CSE</span>
-    <span>SECTION H • SECURE ENTRY</span>
-  </div>
+            <div class="small">
+                INVITATION VERIFIED
+            </div>
 
-  <div class="se-center" id="seScannerScreen">
+            <h1 class="glow">
+                WELCOME,<br>
+                <span class="name" id="studentName">
+                    STUDENT
+                </span>
+            </h1>
 
-    <div class="se-scanner">
+            <div class="small">
+                CSE — SECTION H
+            </div>
 
-      <div class="se-ring r1"></div>
-      <div class="se-ring r2"></div>
-      <div class="se-ring r3"></div>
+            <p class="subtitle">
+                YOUR DIGITAL CLASSROOM AWAITS.
+                <br>
+                YOUR SEAT IS READY.
+            </p>
 
-      <div class="se-scanline"></div>
+            <button id="joinButton" onclick="joinGroup()">
+                ENTER GROUP →
+            </button>
 
-      <div class="se-core"></div>
+            <div class="footer">
+                SECTION H • DIGITAL ENTRY PORTAL
+            </div>
+
+        </div>
 
     </div>
-
-    <div class="se-status">
-      <div class="se-status-main" id="seStatus">
-        INITIALIZING STUDENT ACCESS...
-      </div>
-
-      <div class="se-progress">
-        <div class="se-progress-bar" id="seProgress"></div>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="se-final" id="seFinal">
-
-    <div class="se-card">
-
-      <div class="se-check">✓</div>
-
-      <div class="se-small">
-        ACCESS VERIFIED
-      </div>
-
-      <div class="se-welcome">
-        WELCOME
-      </div>
-
-      <div class="se-name" id="seName">
-        STUDENT
-      </div>
-
-      <div class="se-course">
-        JIT • CSE • SECTION H
-      </div>
-
-      <div class="se-join">
-        JOIN GROUP <span>→</span>
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="se-flash" id="seFlash"></div>
 
 </div>
 
 
 <script>
-(function(){
 
-  /* ---------- STUDENT CODES ---------- */
+/* ==========================================
+   STUDENT DATABASE
+   CODE → FULL NAME
+   ========================================== */
 
-  const students = {
+const students = {
 
-    "2F23":"AACHAL",
-    "JE2E":"AASHU",
-    "4JQQ":"ABDUL",
-    "7Y7J":"ADITI",
-    "SGC0":"ADITI",
-    "N8TQ":"ADITI",
-    "3Z8L":"ADITYA",
-    "9FJX":"ADITYA",
-    "K7W4":"ADVAIT",
-    "H5QK":"AISHWARYA",
-    "Q8N3":"AMAN",
-    "T4ZM":"ANANDI",
-    "6RPK":"ANANYA",
-    "W2GX":"ANGAT",
-    "M9C7":"ANIRUDDHA",
-    "X4A8":"ANIRUDDHA",
-    "P6VD":"ANJALI",
-    "B3KY":"ANSHUL",
-    "R7F2":"ANUSHKA",
-    "D9QM":"ANUSHKA",
-    "V5X8":"ARJUN",
-    "J2NL":"ARYAN",
-    "C8R4":"ARYAN",
-    "G6TP":"ASHRAF",
-    "Y3MK":"ATHARVA",
-    "L8Q5":"BHAKTI",
-    "F4ZN":"CHAITALI",
-    "Q7BW":"CHANCHAL",
-    "K3HX":"CHETAN",
-    "8MVD":"CHITRANSH",
-    "T6QR":"DAKSHESH",
-    "N4YK":"DARSHANA",
-    "W8P3":"DEEP",
-    "R2GF":"DEVANG",
-    "5XQN":"DEVEHI",
-    "J7LC":"DHAIRYA",
-    "M3VK":"DHANASHRI",
-    "9QTB":"DHIRAJ",
-    "F6RW":"DIKSHANT",
-    "X8KM":"DRUSHTI",
-    "C5YP":"EJNAIN",
-    "V9LD":"GAGAN",
-    "H2QW":"GANESH",
-    "P8F4":"GARIMA",
-    "Z3NK":"GAURAV",
-    "R6XJ":"GAURAV",
-    "K9MT":"GAURAV",
-    "B4QZ":"GAURI",
-    "Y7PC":"GUNESH",
-    "D5VR":"GUNJAN",
-    "L2XG":"HARSH",
-    "Q9KF":"HARSHAL",
-    "M6TB":"HARSHITA",
-    "8RWP":"HARSHITA",
-    "F3QY":"HARSHVARDHAN",
-    "N7VC":"HARSHVARDHAN",
-    "X4PJ":"HIMANSHI",
-    "G8RM":"HIMANSHU",
-    "T2KF":"HRUSHALI",
-    "W5QN":"HRUSHIKESH",
-    "C7LX":"ISHIKA",
-    "P4ZG":"ISHIKA",
-    "Y8RB":"JANHVI"
+    "2F23": "AACHAL SANJAY JESWANI",
+    "JE2E": "AASHU NARESH BOKDE",
+    "4JQQ": "ABDUL HADI ANEEQUR RAHMAN",
+    "7Y7J": "ADITI HEMANTRAO SHRIRAO",
+    "SGC0": "ADITI NARESH MARJIYE",
+    "N8TQ": "ADITI VIJAY WANKHEDE",
+    "3Z8L": "ADITYA KISOR CHINCHKHEDE",
+    "9FJX": "ADITYA SANJAY CHAURE",
+    "K7W4": "ADVAIT ATUL SONTAKKE",
+    "H5QK": "AISHWARYA KISHOR DHOTE",
+    "Q8N3": "AMAN ANILKUMAR FULPER",
+    "T4ZM": "ANANDI RAJESH YAWALE",
+    "6RPK": "ANANYA GAJANAN VAIDYA",
+    "W2GX": "ANGAT DHARMENDRA UKEY",
+    "M9C7": "ANIRUDDHA DILIP SAKHARE",
+    "X4A8": "ANIRUDDHA PRAKASH BURBURE",
+    "P6VD": "ANJALI ANIL AHUJA",
+    "B3KY": "ANSHUL GANESH HOOD",
+    "R7F2": "ANUSHKA LAXMAN CHANDEKAR",
+    "D9QM": "ANUSHKA RITESH GUPTA",
+    "V5X8": "ARJUN PRAKASHLAL KHATRI",
+    "J2NL": "ARYAN PRADIP WAHANE",
+    "C8R4": "ARYAN PRAMOD TEMBHURNIKAR",
+    "G6TP": "ASHRAF ALI WAHID ALI",
+    "Y3MK": "ATHARVA JAYENDRA WAROKAR",
+    "L8Q5": "BHAKTI MANOHARJI KAKDE",
+    "F4ZN": "CHAITALI VISHNU JATKAR",
+    "Q7BW": "CHANCHAL SANJAY JESWANI",
+    "K3HX": "CHETAN PRADIP RADE",
+    "8MVD": "CHITRANSH DIPAK SARODE",
+    "T6QR": "DAKSHESH LALCHAND KATIYAR",
+    "N4YK": "DARSHANA SATISH BERAD",
+    "W8P3": "DEEP KISHOR KATHEWAR",
+    "R2GF": "DEVANG SHAILENDRA PATLE",
+    "5XQN": "DEVEHI PRAKASH KAMBLE",
+    "J7LC": "DHAIRYA KAMAL JESWANI",
+    "M3VK": "DHANASHRI JIVAN DALAL",
+    "9QTB": "DHIRAJ RAVINDRA NANDURKAR",
+    "F6RW": "DIKSHANT NISHANT BORKAR",
+    "X8KM": "DRUSHTI DHYANESHWAR MOHADIKAR",
+    "C5YP": "EJNAIN BABAR SHEIKH",
+    "V9LD": "GAGAN RAJU KHADE",
+    "H2QW": "GANESH SUNIL JHAMANI",
+    "P8F4": "GARIMA DEEPAK GEHANI",
+    "Z3NK": "GAURAV GHANSHYAM SAWARKAR",
+    "R6XJ": "GAURAV SANTOSH LACHHAWANI",
+    "K9MT": "GAURAV SUNIL BORKAR",
+    "B4QZ": "GAURI GAJANAN MELE",
+    "Y7PC": "GUNESH WAMAN KHOTELE",
+    "D5VR": "GUNJAN RAJENDRA PALIWAL",
+    "L2XG": "HARSH RAKESH PATIL",
+    "Q9KF": "HARSHAL SURESH HEMNANI",
+    "M6TB": "HARSHITA RAJUSING RATHOD",
+    "8RWP": "HARSHITA VIJAY JANBANDHU",
+    "F3QY": "HARSHVARDHAN RAJESH WASNIK",
+    "N7VC": "HARSHVARDHAN SATISHRAO SUKHE",
+    "X4PJ": "HIMANSHI KAWDU SONTAKKE",
+    "G8RM": "HIMANSHU JAGDISH TAJANE",
+    "T2KF": "HRUSHALI PRAVIN AHIR",
+    "W5QN": "HRUSHIKESH SANJAY BARATE",
+    "C7LX": "ISHIKA DAMODHAR MULE",
+    "P4ZG": "ISHIKA NARENDRA ADMANE",
+    "Y8RB": "JANHVI VIJAY DHANORKAR"
 
-  };
-
-
-  /* ---------- DO NOT RUN ON TEACHER LINKS ---------- */
-
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get("u");
-
-  if(!code || !students[code]){
-    const box = document.getElementById("studentEntry");
-    if(box) box.remove();
-    return;
-  }
+};
 
 
-  /* ---------- NAME ---------- */
+/* ==========================================
+   GET STUDENT CODE FROM URL
+   Example:
+   ?u=C8R4
+   ========================================== */
 
-  document.getElementById("seName").textContent = students[code];
+const params = new URLSearchParams(window.location.search);
 
+const studentCode = params.get("u");
 
-  /* ---------- PARTICLES ---------- */
-
-  const particleBox = document.getElementById("seParticles");
-
-  for(let i=0;i<55;i++){
-
-    const p = document.createElement("div");
-    p.className = "se-particle";
-
-    p.style.left = Math.random()*100 + "%";
-    p.style.animationDuration = (4 + Math.random()*7) + "s";
-    p.style.animationDelay = (-Math.random()*8) + "s";
-
-    const size = (1 + Math.random()*3);
-
-    p.style.width = size + "px";
-    p.style.height = size + "px";
-
-    particleBox.appendChild(p);
-  }
+const fullName = students[studentCode];
 
 
-  /* ---------- ANIMATION ---------- */
+/* ==========================================
+   GET FIRST NAME
+   ========================================== */
 
-  const status = document.getElementById("seStatus");
-  const progress = document.getElementById("seProgress");
-  const scanner = document.getElementById("seScannerScreen");
-  const final = document.getElementById("seFinal");
-  const flash = document.getElementById("seFlash");
+let firstName = "STUDENT";
+
+if (fullName) {
+    firstName = fullName.split(" ")[0];
+}
 
 
-  const stages = [
+/* ==========================================
+   LOADING TEXT ANIMATION
+   ========================================== */
 
-    {
-      time:0,
-      text:"INITIALIZING STUDENT ACCESS...",
-      progress:12
-    },
+const status = document.getElementById("status");
+const loadingText = document.getElementById("loadingText");
 
-    {
-      time:700,
-      text:"CONNECTING TO JIT SYSTEM...",
-      progress:28
-    },
+setTimeout(() => {
+    loadingText.textContent = "VERIFYING...";
+    status.textContent = "VERIFYING INVITATION...";
+}, 1000);
 
-    {
-      time:1450,
-      text:"SCANNING STUDENT ID...",
-      progress:48
-    },
+setTimeout(() => {
+    loadingText.textContent = "AUTHENTICATING...";
+    status.textContent = "AUTHENTICATING USER...";
+}, 2000);
 
-    {
-      time:2200,
-      text:"IDENTITY DETECTED...",
-      progress:68
-    },
+setTimeout(() => {
+    loadingText.textContent = "ACCESS GRANTED";
+    status.textContent = "INVITATION VERIFIED ✓";
+}, 3000);
 
-    {
-      time:2850,
-      text:"VERIFYING SECTION H ACCESS...",
-      progress:84
-    },
 
-    {
-      time:3500,
-      text:"ACCESS VERIFIED ✓",
-      progress:100
+/* ==========================================
+   SHOW WELCOME SCREEN
+   ========================================== */
+
+setTimeout(() => {
+
+    document.getElementById("loadingScreen").style.display = "none";
+
+    const welcomeScreen =
+        document.getElementById("welcomeScreen");
+
+    welcomeScreen.style.display = "block";
+
+
+    if (fullName) {
+
+        document.getElementById("studentName")
+            .textContent = firstName.toUpperCase();
+
+    } else {
+
+        document.getElementById("studentName")
+            .textContent = "STUDENT";
+
+        document.getElementById("status")
+            .textContent = "INVALID INVITATION";
+
     }
 
-  ];
+}, 3500);
 
 
-  stages.forEach(stage=>{
+/* ==========================================
+   WHATSAPP GROUP
+   ========================================== */
 
-    setTimeout(()=>{
+function joinGroup() {
 
-      status.textContent = stage.text;
-      progress.style.width = stage.progress + "%";
+    const button = document.getElementById("joinButton");
 
-    },stage.time);
+    button.textContent = "CONNECTING...";
 
-  });
+    setTimeout(() => {
 
+        window.location.href =
+        "https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN";
 
-  /* ---------- FINAL REVEAL ---------- */
+    }, 500);
 
-  setTimeout(()=>{
+}
 
-    flash.classList.add("active");
-
-    setTimeout(()=>{
-
-      scanner.style.transition =
-        "opacity .65s ease, transform .65s ease";
-
-      scanner.style.opacity = "0";
-      scanner.style.transform = "scale(1.15)";
-
-      final.classList.add("show");
-
-    },180);
-
-  },3900);
-
-
-})();
 </script>
- 
+
+</body>
+</html>
 <!-- ================= FACULTY ACCESS SYSTEM - START ================= -->
 
 <script>
