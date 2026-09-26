@@ -1,18 +1,15 @@
-<!-- =========================================================
-     JIT • CSE • SECTION H
-     PREMIUM STUDENT ENTRY ANIMATION
-     Replace ONLY your old STUDENT animation block with this.
-     Teacher animation remains untouched.
-========================================================= -->
-
+<!-- ================= STUDENT PREMIUM ENTRY ================= -->
 <style>
 #studentEntry{
   position:fixed;
   inset:0;
   z-index:999999;
   overflow:hidden;
-  background:#020409;
-  color:#fff;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(0,180,255,.13),transparent 32%),
+    radial-gradient(circle at 20% 80%,rgba(255,40,90,.08),transparent 30%),
+    #03060b;
+  color:white;
   font-family:Arial,Helvetica,sans-serif;
 }
 
@@ -20,727 +17,412 @@
   box-sizing:border-box;
 }
 
-.se-bg{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(0,190,255,.13),transparent 32%),
-    radial-gradient(circle at 50% 60%,rgba(255,25,60,.09),transparent 48%),
-    #020409;
-}
-
-/* moving atmosphere */
-.se-glow{
-  position:absolute;
-  width:70vw;
-  height:70vw;
-  max-width:500px;
-  max-height:500px;
-  left:50%;
-  top:45%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(0,210,255,.09),transparent 65%);
-  filter:blur(8px);
-  animation:breath 2.5s ease-in-out infinite;
-}
-
-@keyframes breath{
-  0%,100%{transform:translate(-50%,-50%) scale(.85)}
-  50%{transform:translate(-50%,-50%) scale(1.15)}
-}
-
-/* cinematic grid */
 .se-grid{
   position:absolute;
-  width:200%;
-  height:200%;
-  left:-50%;
-  top:-15%;
-  opacity:.15;
+  inset:-50%;
   background-image:
-    linear-gradient(rgba(0,210,255,.22) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,210,255,.22) 1px,transparent 1px);
+    linear-gradient(rgba(0,200,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,.055) 1px,transparent 1px);
   background-size:42px 42px;
-  transform:perspective(500px) rotateX(62deg);
-  animation:gridMove 5s linear infinite;
+  transform:perspective(500px) rotateX(58deg) scale(1.5);
+  animation:seGrid 8s linear infinite;
 }
 
-@keyframes gridMove{
-  from{transform:perspective(500px) rotateX(62deg) translateY(0)}
-  to{transform:perspective(500px) rotateX(62deg) translateY(42px)}
+@keyframes seGrid{
+  from{transform:perspective(500px) rotateX(58deg) scale(1.5) translateY(0)}
+  to{transform:perspective(500px) rotateX(58deg) scale(1.5) translateY(42px)}
 }
 
-/* top HUD */
-.se-header{
-  position:absolute;
-  top:25px;
-  left:0;
-  width:100%;
-  text-align:center;
-  z-index:10;
-  opacity:0;
-  transform:translateY(-15px);
-  animation:headerIn .7s .15s forwards;
-}
-
-.se-header-main{
-  font-size:13px;
-  font-weight:700;
-  letter-spacing:5px;
-  color:#8cefff;
-  text-shadow:0 0 15px rgba(0,220,255,.7);
-}
-
-.se-header-line{
-  width:80px;
-  height:1px;
-  margin:9px auto 0;
-  background:#38eaff;
-  box-shadow:0 0 12px #00d9ff;
-}
-
-@keyframes headerIn{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-/* particles */
-.se-particle{
-  position:absolute;
-  width:2px;
-  height:2px;
-  border-radius:50%;
-  background:#7eefff;
-  box-shadow:0 0 8px #00d9ff;
-  animation:particleUp linear infinite;
-}
-
-@keyframes particleUp{
-  from{
-    transform:translateY(110vh) scale(.5);
-    opacity:0;
-  }
-  15%{opacity:1}
-  80%{opacity:1}
-  to{
-    transform:translateY(-15vh) scale(1.5);
-    opacity:0;
-  }
-}
-
-/* center scanner */
-.se-scanner{
-  position:absolute;
-  left:50%;
-  top:46%;
-  width:min(72vw,300px);
-  height:min(72vw,300px);
-  transform:translate(-50%,-50%) scale(.55);
-  opacity:0;
-  animation:scannerIn .8s .6s forwards;
-}
-
-@keyframes scannerIn{
-  to{
-    opacity:1;
-    transform:translate(-50%,-50%) scale(1);
-  }
-}
-
-.se-ring{
+.se-vignette{
   position:absolute;
   inset:0;
-  border-radius:50%;
-  border:1px solid rgba(47,225,255,.6);
-  box-shadow:
-    0 0 25px rgba(0,210,255,.15),
-    inset 0 0 25px rgba(0,210,255,.08);
+  background:radial-gradient(circle,transparent 35%,rgba(0,0,0,.75) 100%);
 }
 
-.se-ring.r1{
-  animation:rotateClock 7s linear infinite;
-}
-
-.se-ring.r2{
-  inset:13%;
-  border-style:dashed;
-  border-color:rgba(255,45,75,.7);
-  animation:rotateAnti 4s linear infinite;
-}
-
-.se-ring.r3{
-  inset:27%;
-  border-color:rgba(82,239,255,.45);
-  animation:rotateClock 3s linear infinite;
-}
-
-.se-ring.r4{
-  inset:39%;
-  border-color:rgba(255,255,255,.15);
-}
-
-@keyframes rotateClock{
-  to{transform:rotate(360deg)}
-}
-
-@keyframes rotateAnti{
-  to{transform:rotate(-360deg)}
-}
-
-/* web/network spokes */
-.se-web{
+.se-particles{
   position:absolute;
-  inset:7%;
-  border-radius:50%;
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(0,220,255,.32) 0deg 1deg,
-      transparent 1deg 18deg
-    );
-  -webkit-mask:
-    radial-gradient(
-      circle,
-      transparent 0 27%,
-      #000 28% 29%,
-      transparent 30% 38%,
-      #000 39% 40%,
-      transparent 41% 49%,
-      #000 50% 51%,
-      transparent 52% 59%,
-      #000 60% 61%,
-      transparent 62%
-    );
-  mask:
-    radial-gradient(
-      circle,
-      transparent 0 27%,
-      #000 28% 29%,
-      transparent 30% 38%,
-      #000 39% 40%,
-      transparent 41% 49%,
-      #000 50% 51%,
-      transparent 52% 59%,
-      #000 60% 61%,
-      transparent 62%
-    );
-  opacity:.8;
-  animation:webRotate 12s linear infinite;
+  inset:0;
 }
 
-@keyframes webRotate{
-  to{transform:rotate(360deg)}
-}
-
-/* scanning beam */
-.se-beam{
+.se-particle{
   position:absolute;
-  left:8%;
-  width:84%;
+  width:3px;
   height:3px;
-  top:10%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    #69efff,
-    #fff,
-    #69efff,
-    transparent
-  );
-  box-shadow:
-    0 0 10px #00d9ff,
-    0 0 25px #00d9ff;
-  animation:beam 1.7s ease-in-out infinite;
-}
-
-@keyframes beam{
-  0%,100%{top:10%;opacity:.3}
-  50%{top:90%;opacity:1}
-}
-
-/* center core */
-.se-core{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:65px;
-  height:65px;
-  transform:translate(-50%,-50%);
   border-radius:50%;
-  border:1px solid rgba(255,255,255,.7);
-  background:radial-gradient(circle,#fff 0,#48eaff 8%,rgba(0,210,255,.15) 45%,transparent 70%);
-  box-shadow:
-    0 0 20px #00d9ff,
-    0 0 55px rgba(0,210,255,.45);
-  animation:corePulse 1.3s ease-in-out infinite;
+  background:#69eaff;
+  box-shadow:0 0 10px #69eaff;
+  animation:seFloat linear infinite;
 }
 
-@keyframes corePulse{
-  0%,100%{transform:translate(-50%,-50%) scale(.8)}
-  50%{transform:translate(-50%,-50%) scale(1.15)}
+@keyframes seFloat{
+  from{transform:translateY(110vh);opacity:0}
+  15%{opacity:1}
+  85%{opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
 }
 
-/* scan text */
-.se-status{
+/* TOP HUD */
+
+.se-top{
   position:absolute;
-  left:0;
-  width:100%;
-  top:calc(46% + min(38vw,160px));
-  text-align:center;
-  opacity:0;
-  z-index:20;
-  animation:statusIn .5s 1s forwards;
-}
-
-.se-status-text{
-  font-size:clamp(14px,4vw,18px);
-  font-weight:700;
+  top:24px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(90%,520px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:10px;
   letter-spacing:3px;
-  color:#d9fbff;
-  text-shadow:0 0 14px #00d9ff;
+  color:#78eaff;
+  opacity:.85;
 }
 
-.se-progress{
-  width:min(230px,62vw);
-  height:2px;
-  margin:12px auto 0;
-  background:rgba(255,255,255,.12);
-  overflow:hidden;
+.se-top span:last-child{
+  color:#fff;
 }
 
-.se-progress-bar{
-  width:35%;
-  height:100%;
-  background:#4cecff;
-  box-shadow:0 0 12px #00d9ff;
-  animation:progress 1.6s ease-in-out infinite;
-}
+/* CENTER */
 
-@keyframes progress{
-  0%{transform:translateX(-120%)}
-  100%{transform:translateX(400%)}
-}
-
-@keyframes statusIn{
-  to{opacity:1}
-}
-
-/* verification */
-.se-verify{
+.se-center{
   position:absolute;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  z-index:50;
-  opacity:0;
-  pointer-events:none;
 }
 
-.se-check-circle{
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  border:2px solid #5effff;
+.se-scanner{
+  position:relative;
+  width:min(72vw,310px);
+  height:min(72vw,310px);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:52px;
-  color:#fff;
-  text-shadow:0 0 20px #00d9ff;
-  box-shadow:
-    0 0 25px rgba(0,220,255,.7),
-    inset 0 0 25px rgba(0,220,255,.2);
 }
 
-.se-verify-text{
-  margin-top:22px;
-  font-size:clamp(16px,5vw,22px);
-  font-weight:800;
-  letter-spacing:4px;
-  text-shadow:0 0 15px #00d9ff;
-}
-
-.se-verify-sub{
-  margin-top:8px;
-  font-size:11px;
-  letter-spacing:3px;
-  color:#7fefff;
-}
-
-.se-verify.show{
-  animation:verifyShow .8s forwards;
-}
-
-@keyframes verifyShow{
-  0%{
-    opacity:0;
-    transform:scale(.7);
-  }
-  45%{
-    opacity:1;
-    transform:scale(1.08);
-  }
-  100%{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-/* cinematic flash */
-.se-flash{
+.se-ring{
   position:absolute;
-  inset:0;
-  background:#fff;
-  opacity:0;
-  z-index:40;
-  pointer-events:none;
+  border-radius:50%;
+  border:1px solid rgba(69,222,255,.5);
 }
 
-.se-flash.fire{
-  animation:flashFire .5s forwards;
+.se-ring.r1{
+  width:100%;
+  height:100%;
+  border-top-color:#72edff;
+  border-bottom-color:transparent;
+  animation:spin 3s linear infinite;
 }
 
-@keyframes flashFire{
-  0%{opacity:0}
-  15%{opacity:.8}
-  35%{opacity:.15}
-  100%{opacity:0}
+.se-ring.r2{
+  width:82%;
+  height:82%;
+  border-right:2px solid #ff496e;
+  border-left-color:transparent;
+  animation:spinReverse 2.3s linear infinite;
 }
 
-/* final hero card */
+.se-ring.r3{
+  width:63%;
+  height:63%;
+  border-top:1px solid white;
+  border-bottom:1px solid rgba(0,220,255,.8);
+  animation:spin 1.7s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+@keyframes spinReverse{
+  to{transform:rotate(-360deg)}
+}
+
+.se-core{
+  width:31%;
+  height:31%;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,#fff 0%,#73edff 8%,#008fbd 30%,#03131c 68%);
+  box-shadow:
+    0 0 25px #00d9ff,
+    0 0 70px rgba(0,180,255,.7),
+    inset 0 0 25px #fff;
+  animation:corePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes corePulse{
+  50%{
+    transform:scale(1.12);
+    box-shadow:0 0 40px #00d9ff,0 0 100px rgba(0,180,255,.8);
+  }
+}
+
+/* scanning line */
+
+.se-scanline{
+  position:absolute;
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#6ff5ff,transparent);
+  box-shadow:0 0 18px #00d9ff;
+  animation:scan 2s ease-in-out infinite;
+}
+
+@keyframes scan{
+  0%,100%{transform:translateY(-120px);opacity:0}
+  20%{opacity:1}
+  50%{transform:translateY(120px);opacity:1}
+  80%{opacity:0}
+}
+
+/* STATUS */
+
+.se-status{
+  margin-top:34px;
+  text-align:center;
+  width:90%;
+}
+
+.se-status-main{
+  font-size:12px;
+  letter-spacing:3px;
+  color:#7deaff;
+  min-height:18px;
+  text-shadow:0 0 12px rgba(0,210,255,.7);
+}
+
+.se-progress{
+  width:min(75vw,280px);
+  height:3px;
+  margin:15px auto 0;
+  background:rgba(255,255,255,.1);
+  overflow:hidden;
+  border-radius:5px;
+}
+
+.se-progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00bfff,#fff);
+  box-shadow:0 0 12px #00d9ff;
+  transition:width .35s ease;
+}
+
+/* FINAL CARD */
+
 .se-final{
   position:absolute;
   inset:0;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   padding:25px;
   opacity:0;
-  transform:scale(.92);
-  z-index:100;
+  transform:scale(.82);
   pointer-events:none;
+  transition:1s cubic-bezier(.16,1,.3,1);
 }
 
 .se-final.show{
-  animation:finalIn .8s cubic-bezier(.16,.85,.25,1) forwards;
-  pointer-events:auto;
-}
-
-@keyframes finalIn{
-  0%{
-    opacity:0;
-    transform:scale(.88) translateY(25px);
-  }
-  70%{
-    opacity:1;
-    transform:scale(1.02) translateY(0);
-  }
-  100%{
-    opacity:1;
-    transform:scale(1) translateY(0);
-  }
+  opacity:1;
+  transform:scale(1);
 }
 
 .se-card{
-  position:relative;
-  width:min(94vw,450px);
-  padding:36px 22px 28px;
+  width:min(92vw,470px);
+  padding:38px 25px 32px;
   text-align:center;
-  border-radius:24px;
-  border:1px solid rgba(91,235,255,.55);
-  background:
-    linear-gradient(
-      145deg,
-      rgba(7,19,30,.94),
-      rgba(2,7,13,.96)
-    );
-  box-shadow:
-    0 0 40px rgba(0,210,255,.17),
-    0 20px 70px rgba(0,0,0,.6),
-    inset 0 0 40px rgba(0,210,255,.035);
+  position:relative;
   overflow:hidden;
+  border:1px solid rgba(91,231,255,.45);
+  border-radius:24px;
+  background:linear-gradient(
+    145deg,
+    rgba(8,25,37,.94),
+    rgba(3,8,15,.96)
+  );
+  box-shadow:
+    0 0 35px rgba(0,190,255,.18),
+    inset 0 0 45px rgba(0,150,255,.04);
+  backdrop-filter:blur(18px);
 }
 
 .se-card:before{
   content:"";
   position:absolute;
-  width:170px;
-  height:170px;
-  top:-90px;
-  right:-70px;
-  border-radius:50%;
-  border:1px solid rgba(255,35,70,.5);
-  box-shadow:0 0 30px rgba(255,35,70,.15);
+  top:0;
+  left:-50%;
+  width:200%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#7ef4ff,transparent);
+  box-shadow:0 0 15px #00d9ff;
+  animation:cardLine 2.5s linear infinite;
 }
 
-.se-card:after{
-  content:"";
-  position:absolute;
-  width:170px;
-  height:170px;
-  bottom:-100px;
-  left:-80px;
-  border-radius:50%;
-  border:1px solid rgba(0,220,255,.4);
+@keyframes cardLine{
+  from{transform:translateX(-30%)}
+  to{transform:translateX(30%)}
 }
 
-.se-access{
-  font-size:11px;
-  font-weight:700;
+.se-check{
+  width:70px;
+  height:70px;
+  margin:0 auto 22px;
+  border-radius:50%;
+  border:1px solid #65eaff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  color:#6feeff;
+  box-shadow:0 0 25px rgba(0,210,255,.45);
+}
+
+.se-small{
+  font-size:10px;
   letter-spacing:4px;
-  color:#5feaff;
-  margin-bottom:27px;
-  text-shadow:0 0 12px rgba(0,220,255,.6);
-}
-
-.se-access span{
-  color:#ff4965;
-  text-shadow:0 0 12px rgba(255,30,70,.6);
+  color:#72eaff;
+  margin-bottom:12px;
 }
 
 .se-welcome{
   font-size:15px;
-  letter-spacing:6px;
-  color:#9eabb5;
-  margin-bottom:5px;
+  letter-spacing:5px;
+  color:#b8cbd3;
+  margin-bottom:7px;
 }
 
 .se-name{
-  font-size:clamp(42px,13vw,68px);
-  line-height:1;
+  font-size:clamp(42px,12vw,72px);
   font-weight:900;
   letter-spacing:2px;
-  color:#fff;
-  margin-bottom:20px;
-  text-shadow:
-    0 0 8px rgba(255,255,255,.3),
-    0 0 25px rgba(0,220,255,.55),
-    0 0 55px rgba(0,150,255,.25);
-  word-break:break-word;
+  line-height:1;
+  text-transform:uppercase;
+  background:linear-gradient(180deg,#fff,#7cecff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 30px rgba(0,210,255,.25);
+  margin-bottom:18px;
 }
 
-.se-divider{
-  width:90px;
-  height:2px;
-  margin:0 auto 18px;
-  background:linear-gradient(90deg,transparent,#4deaff,transparent);
-  box-shadow:0 0 12px #00d9ff;
-}
-
-.se-meta{
-  font-size:12px;
-  font-weight:700;
+.se-course{
+  font-size:11px;
   letter-spacing:3px;
-  color:#8be4ee;
+  color:#8d9da5;
   margin-bottom:28px;
 }
 
 .se-join{
-  display:flex;
-  width:100%;
-  min-height:54px;
+  display:inline-flex;
   align-items:center;
   justify-content:center;
-  border-radius:12px;
-  border:1px solid #5deaff;
-  background:linear-gradient(
-    90deg,
-    rgba(0,210,255,.08),
-    rgba(0,210,255,.18),
-    rgba(0,210,255,.08)
-  );
-  color:#fff;
-  text-decoration:none;
-  font-size:14px;
-  font-weight:800;
+  gap:10px;
+  min-width:190px;
+  padding:13px 22px;
+  border:1px solid rgba(100,235,255,.55);
+  border-radius:50px;
+  color:#8beeff;
+  font-size:11px;
   letter-spacing:3px;
-  box-shadow:
-    0 0 18px rgba(0,210,255,.18),
-    inset 0 0 18px rgba(0,210,255,.06);
-  position:relative;
-  overflow:hidden;
-  transition:.25s;
+  background:rgba(0,180,255,.06);
+  box-shadow:0 0 20px rgba(0,190,255,.12);
 }
 
-.se-join:before{
-  content:"";
+/* ACCESS FLASH */
+
+.se-flash{
   position:absolute;
-  top:0;
-  left:-100%;
-  width:60%;
-  height:100%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,.25),
-    transparent
-  );
-  animation:buttonShine 2.2s infinite;
+  inset:0;
+  background:white;
+  opacity:0;
+  pointer-events:none;
 }
 
-@keyframes buttonShine{
-  0%{left:-100%}
-  45%,100%{left:150%}
+.se-flash.active{
+  animation:flash .5s ease-out;
 }
 
-.se-join:active{
-  transform:scale(.97);
-}
-
-/* bottom tiny HUD */
-.se-bottom{
-  position:absolute;
-  bottom:22px;
-  left:0;
-  width:100%;
-  text-align:center;
-  font-size:9px;
-  letter-spacing:3px;
-  color:rgba(150,220,230,.55);
-  z-index:110;
-}
-
-/* mobile */
-@media(max-width:500px){
-
-  .se-header{
-    top:22px;
-  }
-
-  .se-header-main{
-    font-size:11px;
-    letter-spacing:4px;
-  }
-
-  .se-scanner{
-    top:43%;
-  }
-
-  .se-status{
-    top:calc(43% + min(38vw,150px));
-  }
-
-  .se-card{
-    padding:34px 18px 25px;
-  }
-
-  .se-name{
-    font-size:clamp(42px,14vw,62px);
-  }
-
-  .se-meta{
-    font-size:10px;
-    letter-spacing:2px;
-  }
+@keyframes flash{
+  0%{opacity:0}
+  15%{opacity:.35}
+  100%{opacity:0}
 }
 </style>
 
 
 <div id="studentEntry">
 
-  <div class="se-bg"></div>
-  <div class="se-glow"></div>
   <div class="se-grid"></div>
+  <div class="se-vignette"></div>
+  <div class="se-particles" id="seParticles"></div>
 
-  <!-- HEADER -->
-  <div class="se-header">
-    <div class="se-header-main">JIT • CSE • SECTION H</div>
-    <div class="se-header-line"></div>
+  <div class="se-top">
+    <span>JIT // CSE</span>
+    <span>SECTION H • SECURE ENTRY</span>
   </div>
 
-  <!-- SCANNER -->
-  <div class="se-scanner">
+  <div class="se-center" id="seScannerScreen">
 
-    <div class="se-ring r1"></div>
-    <div class="se-ring r2"></div>
-    <div class="se-ring r3"></div>
-    <div class="se-ring r4"></div>
+    <div class="se-scanner">
 
-    <div class="se-web"></div>
+      <div class="se-ring r1"></div>
+      <div class="se-ring r2"></div>
+      <div class="se-ring r3"></div>
 
-    <div class="se-beam"></div>
+      <div class="se-scanline"></div>
 
-    <div class="se-core"></div>
+      <div class="se-core"></div>
 
-  </div>
-
-  <!-- STATUS -->
-  <div class="se-status">
-
-    <div class="se-status-text" id="studentStatusText">
-      INITIALIZING ACCESS...
     </div>
 
-    <div class="se-progress">
-      <div class="se-progress-bar"></div>
-    </div>
+    <div class="se-status">
+      <div class="se-status-main" id="seStatus">
+        INITIALIZING STUDENT ACCESS...
+      </div>
 
-  </div>
-
-
-  <!-- VERIFIED -->
-  <div class="se-verify" id="studentVerify">
-
-    <div class="se-check-circle">✓</div>
-
-    <div class="se-verify-text">
-      ACCESS VERIFIED
-    </div>
-
-    <div class="se-verify-sub">
-      STUDENT IDENTITY CONFIRMED
+      <div class="se-progress">
+        <div class="se-progress-bar" id="seProgress"></div>
+      </div>
     </div>
 
   </div>
 
 
-  <!-- FLASH -->
-  <div class="se-flash" id="studentFlash"></div>
-
-
-  <!-- FINAL -->
-  <div class="se-final" id="studentFinal">
+  <div class="se-final" id="seFinal">
 
     <div class="se-card">
 
-      <div class="se-access">
-        <span>●</span> STUDENT ACCESS
+      <div class="se-check">✓</div>
+
+      <div class="se-small">
+        ACCESS VERIFIED
       </div>
 
       <div class="se-welcome">
         WELCOME
       </div>
 
-      <div class="se-name" id="studentFirstName">
-        ARYAN
+      <div class="se-name" id="seName">
+        STUDENT
       </div>
 
-      <div class="se-divider"></div>
-
-      <div class="se-meta">
+      <div class="se-course">
         JIT • CSE • SECTION H
       </div>
 
-      <a
-        class="se-join"
-        href="https://chat.whatsapp.com/LBDoLgNWoeh1rKiWKOvebN"
-        target="_blank"
-      >
-        JOIN GROUP →
-      </a>
+      <div class="se-join">
+        JOIN GROUP <span>→</span>
+      </div>
 
     </div>
 
   </div>
 
-  <div class="se-bottom">
-    STUDENT PORTAL • SECURE CONNECTION
-  </div>
+  <div class="se-flash" id="seFlash"></div>
 
 </div>
 
@@ -748,246 +430,202 @@
 <script>
 (function(){
 
-  /* =====================================================
-     STUDENT CODES
-  ===================================================== */
+  /* ---------- STUDENT CODES ---------- */
 
   const students = {
 
     "2F23":"AACHAL",
     "JE2E":"AASHU",
     "4JQQ":"ABDUL",
-
     "7Y7J":"ADITI",
     "SGC0":"ADITI",
     "N8TQ":"ADITI",
-
     "3Z8L":"ADITYA",
     "9FJX":"ADITYA",
-
     "K7W4":"ADVAIT",
     "H5QK":"AISHWARYA",
     "Q8N3":"AMAN",
-
     "T4ZM":"ANANDI",
     "6RPK":"ANANYA",
     "W2GX":"ANGAT",
-
     "M9C7":"ANIRUDDHA",
     "X4A8":"ANIRUDDHA",
-
     "P6VD":"ANJALI",
     "B3KY":"ANSHUL",
-
     "R7F2":"ANUSHKA",
     "D9QM":"ANUSHKA",
-
     "V5X8":"ARJUN",
     "J2NL":"ARYAN",
     "C8R4":"ARYAN",
-
     "G6TP":"ASHRAF",
     "Y3MK":"ATHARVA",
     "L8Q5":"BHAKTI",
-
     "F4ZN":"CHAITALI",
     "Q7BW":"CHANCHAL",
     "K3HX":"CHETAN",
-
     "8MVD":"CHITRANSH",
     "T6QR":"DAKSHESH",
     "N4YK":"DARSHANA",
-
     "W8P3":"DEEP",
     "R2GF":"DEVANG",
     "5XQN":"DEVEHI",
-
     "J7LC":"DHAIRYA",
     "M3VK":"DHANASHRI",
     "9QTB":"DHIRAJ",
-
     "F6RW":"DIKSHANT",
     "X8KM":"DRUSHTI",
     "C5YP":"EJNAIN",
-
     "V9LD":"GAGAN",
     "H2QW":"GANESH",
     "P8F4":"GARIMA",
-
     "Z3NK":"GAURAV",
     "R6XJ":"GAURAV",
     "K9MT":"GAURAV",
-
     "B4QZ":"GAURI",
     "Y7PC":"GUNESH",
     "D5VR":"GUNJAN",
-
     "L2XG":"HARSH",
     "Q9KF":"HARSHAL",
-
     "M6TB":"HARSHITA",
     "8RWP":"HARSHITA",
-
     "F3QY":"HARSHVARDHAN",
     "N7VC":"HARSHVARDHAN",
-
     "X4PJ":"HIMANSHI",
     "G8RM":"HIMANSHU",
-
     "T2KF":"HRUSHALI",
     "W5QN":"HRUSHIKESH",
-
     "C7LX":"ISHIKA",
     "P4ZG":"ISHIKA",
-
     "Y8RB":"JANHVI"
+
   };
 
 
-  /* =====================================================
-     READ STUDENT CODE
-  ===================================================== */
+  /* ---------- DO NOT RUN ON TEACHER LINKS ---------- */
 
   const params = new URLSearchParams(window.location.search);
   const code = params.get("u");
 
-  /*
-     IMPORTANT:
-     If there is no student code, this block disappears.
-     Therefore ?t=F01G etc. continues to use teacher system.
-  */
-
   if(!code || !students[code]){
-
-    const studentEntry = document.getElementById("studentEntry");
-
-    if(studentEntry){
-      studentEntry.remove();
-    }
-
+    const box = document.getElementById("studentEntry");
+    if(box) box.remove();
     return;
   }
 
 
-  /* =====================================================
-     STUDENT NAME
-  ===================================================== */
+  /* ---------- NAME ---------- */
 
-  const firstName = students[code];
-
-  document.getElementById("studentFirstName").textContent = firstName;
+  document.getElementById("seName").textContent = students[code];
 
 
-  /* =====================================================
-     PARTICLES
-  ===================================================== */
+  /* ---------- PARTICLES ---------- */
 
-  const entry = document.getElementById("studentEntry");
+  const particleBox = document.getElementById("seParticles");
 
-  for(let i=0;i<65;i++){
+  for(let i=0;i<55;i++){
 
     const p = document.createElement("div");
+    p.className = "se-particle";
 
-    p.className="se-particle";
+    p.style.left = Math.random()*100 + "%";
+    p.style.animationDuration = (4 + Math.random()*7) + "s";
+    p.style.animationDelay = (-Math.random()*8) + "s";
 
-    p.style.left=(Math.random()*100)+"%";
+    const size = (1 + Math.random()*3);
 
-    p.style.animationDuration=
-      (3+Math.random()*5)+"s";
+    p.style.width = size + "px";
+    p.style.height = size + "px";
 
-    p.style.animationDelay=
-      (-Math.random()*7)+"s";
-
-    p.style.opacity=
-      (.2+Math.random()*.8);
-
-    if(Math.random()>.78){
-
-      p.style.background="#ff4665";
-
-      p.style.boxShadow=
-        "0 0 8px #ff2448";
-    }
-
-    entry.appendChild(p);
+    particleBox.appendChild(p);
   }
 
 
-  /* =====================================================
-     ELEMENTS
-  ===================================================== */
+  /* ---------- ANIMATION ---------- */
 
-  const status =
-    document.getElementById("studentStatusText");
-
-  const verify =
-    document.getElementById("studentVerify");
-
-  const flash =
-    document.getElementById("studentFlash");
-
-  const finalScreen =
-    document.getElementById("studentFinal");
+  const status = document.getElementById("seStatus");
+  const progress = document.getElementById("seProgress");
+  const scanner = document.getElementById("seScannerScreen");
+  const final = document.getElementById("seFinal");
+  const flash = document.getElementById("seFlash");
 
 
-  /* =====================================================
-     CINEMATIC SEQUENCE
-  ===================================================== */
+  const stages = [
 
-  /* 0.0 sec */
+    {
+      time:0,
+      text:"INITIALIZING STUDENT ACCESS...",
+      progress:12
+    },
+
+    {
+      time:700,
+      text:"CONNECTING TO JIT SYSTEM...",
+      progress:28
+    },
+
+    {
+      time:1450,
+      text:"SCANNING STUDENT ID...",
+      progress:48
+    },
+
+    {
+      time:2200,
+      text:"IDENTITY DETECTED...",
+      progress:68
+    },
+
+    {
+      time:2850,
+      text:"VERIFYING SECTION H ACCESS...",
+      progress:84
+    },
+
+    {
+      time:3500,
+      text:"ACCESS VERIFIED ✓",
+      progress:100
+    }
+
+  ];
+
+
+  stages.forEach(stage=>{
+
+    setTimeout(()=>{
+
+      status.textContent = stage.text;
+      progress.style.width = stage.progress + "%";
+
+    },stage.time);
+
+  });
+
+
+  /* ---------- FINAL REVEAL ---------- */
+
   setTimeout(()=>{
-    status.textContent="INITIALIZING ACCESS...";
-  },100);
 
+    flash.classList.add("active");
 
-  /* 0.8 sec */
-  setTimeout(()=>{
-    status.textContent="CONNECTING TO CSE SYSTEM...";
-  },800);
+    setTimeout(()=>{
 
+      scanner.style.transition =
+        "opacity .65s ease, transform .65s ease";
 
-  /* 1.4 sec */
-  setTimeout(()=>{
-    status.textContent="SCANNING STUDENT ID...";
-  },1400);
+      scanner.style.opacity = "0";
+      scanner.style.transform = "scale(1.15)";
 
+      final.classList.add("show");
 
-  /* 2.2 sec */
-  setTimeout(()=>{
-    status.textContent="IDENTITY DETECTED...";
-  },2200);
+    },180);
 
-
-  /* 2.8 sec */
-  setTimeout(()=>{
-    status.textContent="VERIFYING ACCESS...";
-  },2800);
-
-
-  /* 3.5 sec — verification impact */
-  setTimeout(()=>{
-
-    flash.classList.add("fire");
-
-    verify.classList.add("show");
-
-  },3500);
-
-
-  /* 4.35 sec — final hero reveal */
-  setTimeout(()=>{
-
-    verify.style.opacity="0";
-
-    finalScreen.classList.add("show");
-
-  },4350);
+  },3900);
 
 
 })();
 </script>
-
-    
+ 
 <!-- ================= FACULTY ACCESS SYSTEM - START ================= -->
 
 <script>
