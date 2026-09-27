@@ -1738,6 +1738,42 @@ function joinGroup(){
 </script>
 
 <!-- ================= FACULTY ACCESS SYSTEM - END ================= -->
-       
+ <script>
+const EXPIRY_DATE = new Date("2026-09-30T23:59:59+05:30");
+
+function checkExpiry() {
+    if (new Date() > EXPIRY_DATE) {
+        document.documentElement.innerHTML = `
+            <head>
+                <title>Link Expired</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body style="
+                margin:0;
+                min-height:100vh;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                text-align:center;
+                font-family:Arial,sans-serif;
+                background:#fff;
+                color:#222;
+            ">
+                <div>
+                    <h1>Link Expired</h1>
+                    <p>This link is no longer available.</p>
+                </div>
+            </body>
+        `;
+    }
+}
+
+// Check immediately when page opens/reloads
+checkExpiry();
+
+// Also check every 1 second if the page was already open
+setInterval(checkExpiry, 1000);
+ </script>
+
 </body>
 </html>
